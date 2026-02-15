@@ -148,7 +148,7 @@ export function Footer() {
           className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400"
         >
           <p>
-            &copy; 2025 Alanoud Alqadi Atelier. All rights reserved. | 
+            &copy; 2026 Alanoud Alqadi Atelier. All rights reserved. | 
             <span className="text-gray-500"> Made by </span>
             <a 
               href="https://www.instagram.com/digitiva.co?igsh=MXNteGgyZjIzenQwaQ==" 
