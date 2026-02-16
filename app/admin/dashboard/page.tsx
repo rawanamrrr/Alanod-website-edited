@@ -1109,7 +1109,11 @@ export default function AdminDashboard() {
                                   <div className="space-y-2">
                                     <p className="font-bold text-lg sm:text-xl text-gray-900 leading-tight">{product.name}</p>
                                     <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-3">
-                                      <p className="text-sm text-gray-600 capitalize font-medium">{product.category}</p>
+                                      <p className="text-sm text-gray-600 capitalize font-medium">
+                                        {product.category === "winter" ? "WS26" : 
+                                         product.category === "summer" ? "FW26" : 
+                                         product.category}
+                                      </p>
                                       {product.isGiftPackage && (
                                         <motion.div
                                           initial={{ scale: 0, x: -20 }}

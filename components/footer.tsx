@@ -77,9 +77,6 @@ export function Footer() {
               <Link href="/products/summer" className="block text-gray-400 hover:text-white transition-colors">
                 {t("summerCollection")}
               </Link>
-              <Link href="/products/fall" className="block text-gray-400 hover:text-white transition-colors">
-                {t("fallCollection")}
-              </Link>
             </div>
           </motion.div>
 

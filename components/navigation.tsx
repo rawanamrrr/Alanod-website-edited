@@ -269,7 +269,7 @@ export function Navigation() {
         <div className="container mx-auto px-6 relative">
           <div className="flex items-center justify-between h-16 relative">
           {/* Left side */}
-          <div className="flex justify-start items-center md:space-x-2">
+          <div className="flex justify-start items-center md:space-x-2 lg:space-x-4">
                 {/* Mobile Menu Button */}
                 <div className="md:hidden">
                     <button
@@ -355,17 +355,21 @@ export function Navigation() {
                 )}
 
                 {/* Desktop Navigation - Left */}
-                <div className="hidden md:flex items-center space-x-8">
-                    <Link href="/" className={`relative px-3 py-2 transition-colors ${getTextColors(isActiveLink("/"))}`}>
+                <div className="hidden md:flex items-center space-x-2 lg:space-x-4">
+                    <Link href="/" className={`relative px-1 py-2 transition-colors text-xs lg:text-sm ${getTextColors(isActiveLink("/"))}`}>
                         {t("home")}
                         {isActiveLink("/") && <div className={`absolute bottom-0 left-0 right-0 h-0.5 rounded-full ${getActiveIndicatorColor()}`} />}
                     </Link>
-                    <Link href="/about" className={`relative px-3 py-2 transition-colors ${getTextColors(isActiveLink("/about"))}`}>
+                    <Link href="/about" className={`relative px-1 py-2 transition-colors text-xs lg:text-sm ${getTextColors(isActiveLink("/about"))}`}>
                         {t("about")}
                         {isActiveLink("/about") && <div className={`absolute bottom-0 left-0 right-0 h-0.5 rounded-full ${getActiveIndicatorColor()}`} />}
                     </Link>
+                    <Link href="/customize" className={`relative px-1 py-2 transition-colors text-xs lg:text-sm ${getTextColors(isActiveLink("/customize"))}`}>
+                        {t("customize")}
+                        {isActiveLink("/customize") && <div className={`absolute bottom-0 left-0 right-0 h-0.5 rounded-full ${getActiveIndicatorColor()}`} />}
+                    </Link>
                     <div className="relative group">
-                        <Link href="/products" className={`relative px-3 py-2 transition-colors ${getTextColors(isActiveLink("/products"))}`}>
+                        <Link href="/products" className={`relative px-1 py-2 transition-colors text-xs lg:text-sm ${getTextColors(isActiveLink("/products"))}`}>
                             {t("collections")}
                             {isActiveLink("/products") && <div className={`absolute bottom-0 left-0 right-0 h-0.5 rounded-full ${getActiveIndicatorColor()}`} />}
                         </Link>
@@ -373,11 +377,10 @@ export function Navigation() {
                             <div className="py-2">
                                 <Link href="/products/winter" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-black transition-colors">{t("winterCollection")}</Link>
                                 <Link href="/products/summer" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-black transition-colors">{t("summerCollection")}</Link>
-                                <Link href="/products/fall" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-black transition-colors">{t("fallCollection")}</Link>
                             </div>
                         </div>
                     </div>
-                    <Link href="/contact" className={`relative px-3 py-2 transition-colors ${getTextColors(isActiveLink("/contact"))}`}>
+                    <Link href="/contact" className={`relative px-1 py-2 transition-colors text-xs lg:text-sm ${getTextColors(isActiveLink("/contact"))}`}>
                         {t("contact")}
                         {isActiveLink("/contact") && <div className={`absolute bottom-0 left-0 right-0 h-0.5 rounded-full ${getActiveIndicatorColor()}`} />}
                     </Link>
@@ -597,7 +600,7 @@ export function Navigation() {
                        onClick={() => setIsOpen(false)}
                      >
                        <span className="text-sm font-light tracking-wide text-black uppercase" style={{ letterSpacing: '0.1em' }}>
-                         WINTER COLLECTION
+                         {t("winterCollection").toUpperCase()}
                        </span>
                        <ChevronRight className="h-4 w-4 text-gray-400" />
                      </Link>
@@ -608,18 +611,7 @@ export function Navigation() {
                        onClick={() => setIsOpen(false)}
                      >
                        <span className="text-sm font-light tracking-wide text-black uppercase" style={{ letterSpacing: '0.1em' }}>
-                         SUMMER COLLECTION
-                       </span>
-                       <ChevronRight className="h-4 w-4 text-gray-400" />
-                     </Link>
-                     
-                     <Link
-                       href="/products/fall"
-                       className="flex items-center justify-between py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors"
-                       onClick={() => setIsOpen(false)}
-                     >
-                       <span className="text-sm font-light tracking-wide text-black uppercase" style={{ letterSpacing: '0.1em' }}>
-                         FALL COLLECTION
+                         {t("summerCollection").toUpperCase()}
                        </span>
                        <ChevronRight className="h-4 w-4 text-gray-400" />
                      </Link>
@@ -642,6 +634,16 @@ export function Navigation() {
                      >
                        <span className="text-sm font-light tracking-wide text-black uppercase" style={{ letterSpacing: '0.1em' }}>
                          {t("about").toUpperCase()}
+                       </span>
+                     </Link>
+                     
+                     <Link
+                       href="/customize"
+                       className="flex items-center justify-between py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors"
+                       onClick={() => setIsOpen(false)}
+                     >
+                       <span className="text-sm font-light tracking-wide text-black uppercase" style={{ letterSpacing: '0.1em' }}>
+                         {t("customize").toUpperCase()}
                        </span>
                      </Link>
                      

@@ -83,7 +83,10 @@ function buildMessage(payload: WhatsAppOrderPayload) {
   lines.push(`Product: ${product.name}`)
 
   if (product.category) {
-    lines.push(`Category: ${product.category}`)
+    const displayCategory = product.category === "winter" ? "WS26" : 
+                            product.category === "summer" ? "FW26" : 
+                            product.category;
+    lines.push(`Category: ${displayCategory}`)
   }
 
   if (countryName) {

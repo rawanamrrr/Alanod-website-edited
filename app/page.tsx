@@ -1131,11 +1131,30 @@ export default function HomePage() {
       >
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Alanod Background Image - Now on the left */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4 }}
               viewport={{ once: true }}
+              className="w-full h-64 md:h-[500px] relative order-2 md:order-1"
+            >
+              <Image
+                src="/Alanod-bg.jpeg"
+                alt="Alanod Background"
+                fill
+                className="object-cover rounded-lg shadow-xl"
+                priority
+              />
+            </motion.div>
+
+            {/* Text Content - Now on the right */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4 }}
+              viewport={{ once: true }}
+              className="order-1 md:order-2"
             >
               <h2 className="text-3xl md:text-4xl font-light tracking-wider mb-6">{t("theArtOfCouture")}</h2>
               <motion.p
@@ -1165,31 +1184,71 @@ export default function HomePage() {
                 <Link href="/about">
                   <Button
                     variant="outline"
-                    className="border-black text-black hover:bg-black hover:text-white bg-transparent rounded-full px-6 py-5 group relative overflow-hidden"
+                    className="border-black text-black hover:bg-black hover:text-white bg-transparent rounded-full px-8 py-6 group relative overflow-hidden transition-all duration-300"
                   >
-                    <span className="relative z-10">{t("learnMoreAboutUs")}</span>
-                    <ArrowRight className="ml-2 h-4 w-4 relative z-10" />
-                    <motion.span
-                      className="absolute inset-0 bg-black opacity-0 group-hover:opacity-100"
-                      initial={{ x: "-100%" }}
-                      whileHover={{ x: 0 }}
-                      transition={{ duration: 0.2 }}
-                    />
+                    <span className="relative z-10 font-medium">{t("learnMoreAboutUs")}</span>
+                    <ArrowRight className="ml-2 h-4 w-4 relative z-10 transition-transform group-hover:translate-x-1" />
                   </Button>
                 </Link>
-                {/* Alanod Background Image */}
-                <div className="mt-12 w-full h-64 md:h-96 relative">
-                  <Image
-                    src="/Alanod-bg.jpeg"
-                    alt="Alanod Background"
-                    fill
-                    className="object-cover rounded-lg"
-                    priority
-                  />
-                </div>
               </motion.div>
             </motion.div>
+          </div>
+        </div>
+      </motion.section>
 
+      {/* Customize Your Own Dress Section */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: true }}
+        className="py-24 bg-zinc-900 text-white relative overflow-hidden"
+      >
+        {/* Background Accent */}
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-purple-900/10 to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-1/3 h-full bg-gradient-to-r from-pink-900/10 to-transparent pointer-events-none" />
+
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="max-w-4xl mx-auto text-center space-y-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="space-y-4"
+            >
+              <h2 className="text-4xl md:text-5xl font-light tracking-widest font-serif">
+                {t("customizeYourDress")}
+              </h2>
+              <div className="h-px w-24 bg-gradient-to-r from-purple-400 to-pink-400 mx-auto" />
+            </motion.div>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="text-lg md:text-xl text-zinc-300 leading-relaxed font-light"
+            >
+              {t("customizeYourDressDesc")}
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <Link href="/customize">
+                <Button
+                  className="bg-white text-black hover:bg-zinc-200 rounded-full px-10 py-7 text-lg font-medium transition-all duration-300 group shadow-xl hover:shadow-white/10"
+                >
+                  <Sparkles className="mr-2 h-6 w-6 text-purple-600" />
+                  {t("customizeYourDressButton")}
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+            </motion.div>
           </div>
         </div>
       </motion.section>

@@ -61,14 +61,14 @@ interface Product {
 }
 
 const categoryTitles = {
-  winter: "Winter Collection",
-  summer: "Summer Collection",
+  winter: "WS26",
+  summer: "FW26",
   fall: "Fall Collection",
 }
 
 const categoryDescriptions = {
-  winter: "Elegant winter pieces designed for the season's special occasions.",
-  summer: "Light and airy designs perfect for warm weather celebrations.",
+  winter: "WS26 collection pieces designed for the season's special occasions.",
+  summer: "FW26 collection designs perfect for warm weather celebrations.",
   fall: "Rich textures and warm tones for autumn gatherings.",
 }
 

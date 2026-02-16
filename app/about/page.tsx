@@ -56,57 +56,33 @@ export default function AboutPage() {
               <p className="text-gray-600 mb-6 leading-relaxed">
                 {t("newChapterDesc2")}
               </p>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-gray-600 mb-6 leading-relaxed">
                 {t("newChapterDesc3")}
               </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="order-2 md:order-1"
-            >
-              <Image
-                src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=900&q=80"
-                alt="Couture atelier"
-                width={500}
-                height={400}
-                className="w-full h-80 object-cover rounded-lg shadow-lg"
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="order-1 md:order-2"
-            >
-              <Image
-                src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80"
-                alt="Evening gown craftsmanship"
-                width={500}
-                height={400}
-                className="w-full h-80 object-cover rounded-lg shadow-lg"
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="order-2 md:order-1"
-            >
-              <h2 className="text-3xl font-light tracking-wider font-serif mb-6">{t("ourPhilosophy")}</h2>
+              
+              <h2 className="text-3xl font-light tracking-wider font-serif mb-6 mt-12">{t("ourPhilosophy")}</h2>
               <p className="text-gray-600 mb-6 leading-relaxed">
                 {t("philosophyDesc1")}
               </p>
               <p className="text-gray-600 leading-relaxed">
                 {t("philosophyDesc2")}
               </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <Image
+                src="/about.jpeg"
+                alt="About Alanod"
+                width={800}
+                height={1000}
+                className="w-full h-[600px] object-cover rounded-lg shadow-lg"
+                priority
+              />
             </motion.div>
           </div>
         </div>

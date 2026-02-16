@@ -28,12 +28,12 @@ export const translations = {
     learnMoreAboutUs: "Learn More About Us",
     
     // Collections
-    winterCollection: "Winter Collection",
-    summerCollection: "Summer Collection",
-    fallCollection: "Fall Collection",
-    winterDesc: "Elegant winter pieces designed for the season's special occasions.",
-    summerDesc: "Light and airy designs perfect for warm weather celebrations.",
-    fallDesc: "Rich textures and warm tones for autumn gatherings.",
+    winterCollection: "WS26",
+    summerCollection: "FW26",
+    fallCollection: "Collection 3",
+    winterDesc: "WS26 collection pieces designed for the season's special occasions.",
+    summerDesc: "FW26 collection designs perfect for warm weather celebrations.",
+    fallDesc: "Elegant pieces for our upcoming collection.",
     
     // Products
     selectSize: "Select your preferred size",
@@ -96,9 +96,9 @@ export const translations = {
     viewAll: "View All",
     confirmAddToCart: "Confirm & Add to Cart",
     reviewAgain: "Review Again",
-    elegantWinterPieces: "Elegant Winter Pieces",
-    elegantSummerPieces: "Light & Airy Designs",
-    elegantFallPieces: "Rich Textures & Warm Tones",
+    elegantWinterPieces: "WS26 Pieces",
+    elegantSummerPieces: "FW26 Designs",
+    elegantFallPieces: "New Collection",
     
     // Contact Page
     getInTouch: "Get in Touch",
@@ -195,6 +195,10 @@ export const translations = {
     items: "items",
     orderSummary: "Order Summary",
     loadMore: "Load More",
+    customizeYourDress: "Customize Your Own Dress",
+    customizeYourDressDesc: "Have a specific vision in mind? Our master artisans can bring your dream gown to life. From custom fabrics to unique silhouettes, we offer a bespoke experience tailored to your style.",
+    customizeYourDressButton: "Customize Your Dress Now",
+    customize: "Customize",
   },
   ar: {
     // Navigation
@@ -225,12 +229,12 @@ export const translations = {
     learnMoreAboutUs: "اعرف المزيد عنا",
     
     // Collections
-    winterCollection: "مجموعة الشتاء",
-    summerCollection: "مجموعة الصيف",
-    fallCollection: "مجموعة الخريف",
-    winterDesc: "قطع شتوية أنيقة مصممة لمناسبات الموسم الخاصة.",
-    summerDesc: "تصاميم خفيفة وناعمة مثالية لاحتفالات الطقس الدافئ.",
-    fallDesc: "أنسجة غنية وألوان دافئة لتجمعات الخريف.",
+    winterCollection: "مجموعة WS26",
+    summerCollection: "مجموعة FW26",
+    fallCollection: "المجموعة الثالثة",
+    winterDesc: "قطع مجموعة WS26 المصممة للمناسبات الخاصة.",
+    summerDesc: "تصاميم مجموعة FW26 المثالية للاحتفالات.",
+    fallDesc: "تصاميم أنيقة لمجموعتنا القادمة.",
     
     // Products
     selectSize: "اختر المقاس المفضل",
@@ -293,9 +297,9 @@ export const translations = {
     viewAll: "عرض الكل",
     confirmAddToCart: "تأكيد وإضافة إلى السلة",
     reviewAgain: "مراجعة مرة أخرى",
-    elegantWinterPieces: "قطع شتوية أنيقة",
-    elegantSummerPieces: "تصاميم خفيفة وناعمة",
-    elegantFallPieces: "أنسجة غنية وألوان دافئة",
+    elegantWinterPieces: "قطع WS26",
+    elegantSummerPieces: "تصاميم FW26",
+    elegantFallPieces: "المجموعة الجديدة",
     
     // Contact Page
     getInTouch: "تواصلي معنا",
@@ -392,6 +396,10 @@ export const translations = {
     items: "عناصر",
     orderSummary: "ملخص الطلب",
     loadMore: "عرض المزيد",
+    customizeYourDress: "صممي فستانك الخاص",
+    customizeYourDressDesc: "هل لديكِ رؤية معينة؟ يمكن لحرفيينا المهرة تحويل فستان أحلامك إلى حقيقة. من الأقمشة المخصصة إلى القصات الفريدة، نقدم تجربة تفصيل حصرية مصممة خصيصاً لأسلوبك.",
+    customizeYourDressButton: "صممي فستانك الآن",
+    customize: "تصميم خاص",
   }
 }
 

@@ -347,9 +347,8 @@ export default function AddProductPage() {
                             <SelectValue placeholder="Select collection" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="winter">Winter</SelectItem>
-                            <SelectItem value="summer">Summer</SelectItem>
-                            <SelectItem value="fall">Fall</SelectItem>
+                            <SelectItem value="winter">WS26</SelectItem>
+                            <SelectItem value="summer">FW26</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
