@@ -60,14 +60,14 @@ export default function AboutPage() {
                 {t("newChapterDesc3")}
               </p>
               
-              <h2 className="text-3xl font-light tracking-wider font-serif mb-6 mt-12">{t("ourPhilosophy")}</h2>
-              <p className="text-gray-600 mb-6 leading-relaxed">
-                {t("philosophyDesc1")}
-              </p>
-              <p className="text-gray-600 leading-relaxed">
-                {t("philosophyDesc2")}
-              </p>
-            </motion.div>
+            <h2 className="text-2xl font-light tracking-wider font-engravers mb-6 uppercase">{t("ourPhilosophy")}</h2>
+            <p className="text-gray-600 mb-6 leading-relaxed">
+              {t("philosophyDesc1")}
+            </p>
+            <p className="text-gray-600 leading-relaxed">
+              {t("philosophyDesc2")}
+            </p>
+          </motion.div>
 
             <motion.div
               initial={{ opacity: 0, x: 30 }}
@@ -98,7 +98,7 @@ export default function AboutPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-light tracking-wider font-serif mb-6">{t("ourValues")}</h2>
+            <h2 className="text-2xl md:text-3xl font-light tracking-wider font-engravers mb-6">{t("ourValues")}</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               {t("valuesDesc")}
             </p>
@@ -165,7 +165,7 @@ export default function AboutPage() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl font-light tracking-wider font-serif mb-6">{t("experienceOurCraft")}</h2>
+            <h2 className="text-2xl md:text-3xl font-light tracking-wider font-engravers mb-6">{t("experienceOurCraft")}</h2>
             <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
               {t("experienceDesc")}
             </p>

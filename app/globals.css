@@ -10,6 +10,12 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Playfair Display', serif;
   }
+  
+  .font-engravers {
+    font-family: var(--font-engravers-gothic), "Engravers Gothic", "Century Gothic", sans-serif !important;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+  }
 }
 
 @layer utilities {

@@ -85,7 +85,7 @@ export default function ContactPage() {
               <ArrowLeft className={`h-4 w-4 ${settings.language === "ar" ? "ml-2 rotate-180" : "mr-2"}`} />
               {t("backToHome")}
             </Link>
-            <h1 className="text-4xl md:text-5xl font-light tracking-[0.35em] font-serif uppercase mb-6">{t("getInTouch")}</h1>
+            <h1 className="text-3xl md:text-4xl font-light tracking-[0.35em] font-engravers uppercase mb-6">{t("getInTouch")}</h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               {t("contactHeroDesc")}
             </p>
@@ -300,7 +300,7 @@ export default function ContactPage() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl md:text-4xl font-light tracking-wider font-serif mb-6">{t("frequentlyAskedQuestions")}</h2>
+            <h2 className="text-3xl md:text-4xl font-light tracking-wider font-engravers mb-6">{t("frequentlyAskedQuestions")}</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               {t("faqDesc")}
             </p>

@@ -117,7 +117,7 @@ export default function CustomizePage() {
               >
                 {settings.language === 'en' ? "Mastery in every stitch" : "إتقان في كل غرزة"}
               </motion.span>
-              <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-8 font-serif text-gray-900">
+              <h2 className="text-3xl md:text-4xl font-light tracking-tight mb-8 font-engravers text-gray-900">
                 {settings.language === 'en' ? "How It Works" : "فن التفصيل الخاص"}
               </h2>
               <p className="text-gray-500 text-lg font-light leading-relaxed">
@@ -157,7 +157,7 @@ export default function CustomizePage() {
         <section className="py-20 bg-gray-50/50">
           <div className="container mx-auto px-6">
             <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-8 font-serif text-gray-900">
+              <h2 className="text-3xl md:text-4xl font-light tracking-tight mb-8 font-engravers text-gray-900">
                 {settings.language === 'en' ? "Your Personal Styling Experience" : "تجربتك الشخصية في التنسيق"}
               </h2>
               <p className="text-gray-600 text-lg font-light leading-relaxed mb-8">
@@ -166,10 +166,10 @@ export default function CustomizePage() {
                   : "من الرسم الأول إلى الغرزة الأخيرة، سيقوم فريقنا الودود ومنسقو الأزياء ذوو الخبرة بإرشادك في كل خطوة على الطريق."}
               </p>
               <div className="space-y-2">
-                <p className="text-gray-900 text-xl font-medium font-serif italic">
+                <p className="text-gray-900 text-lg font-medium font-engravers italic">
                   {settings.language === 'en' ? "We don’t just design dresses" : "نحن لا نصمم الفساتين فحسب"}
                 </p>
-                <p className="text-gray-900 text-xl font-medium font-serif italic">
+                <p className="text-gray-900 text-lg font-medium font-engravers italic">
                   {settings.language === 'en' ? "we finish them beautifully." : "بل ننهيها بجمال."}
                 </p>
               </div>
@@ -188,7 +188,7 @@ export default function CustomizePage() {
               className="max-w-5xl mx-auto rounded-3xl border border-gray-200 bg-white shadow-sm"
             >
               <div className="px-8 py-12 md:px-14 md:py-16 text-center">
-                <h2 className="text-3xl md:text-5xl text-gray-900 font-light font-serif leading-tight">
+                <h2 className="text-2xl md:text-4xl text-gray-900 font-light font-engravers leading-tight">
                   {settings.language === 'en'
                     ? "Start your custom gown consultation"
                     : "ابدئي استشارة فستانكِ المُخصص"}

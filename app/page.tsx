@@ -877,7 +877,7 @@ export default function HomePage() {
             className="text-center space-y-4"
           >
             <motion.h1
-              className="text-4xl md:text-6xl font-light tracking-wider text-gray-900 font-serif"
+              className="text-3xl md:text-4xl font-light tracking-wider text-gray-900 font-engravers"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.15 }}
@@ -886,7 +886,7 @@ export default function HomePage() {
               {t("embraceYour")}
             </motion.h1>
             <motion.h2
-              className="text-4xl md:text-6xl font-light tracking-wider text-gray-900 font-serif"
+              className="text-3xl md:text-4xl font-light tracking-wider text-gray-900 font-engravers"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.25 }}
@@ -939,7 +939,7 @@ export default function HomePage() {
           <div
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-light tracking-wider mb-4 font-serif">{t("allProducts")}</h2>
+            <h2 className="text-2xl md:text-3xl font-light tracking-wider mb-6 font-engravers">{t("allProducts")}</h2>
             <div
               className="h-1 bg-gradient-to-r from-purple-400 to-pink-400 mx-auto my-6 rounded-full w-[100px]"
             />
@@ -1132,7 +1132,7 @@ export default function HomePage() {
               viewport={{ once: true }}
               className="order-1 md:order-2"
             >
-              <h2 className="text-3xl md:text-4xl font-light tracking-wider mb-6">{t("theArtOfCouture")}</h2>
+              <h2 className="text-2xl md:text-3xl font-light tracking-wider mb-6 font-engravers">{t("theArtOfCouture")}</h2>
               <motion.p
                 className="text-gray-600 mb-6 leading-relaxed"
                 initial={{ opacity: 0 }}
@@ -1192,7 +1192,7 @@ export default function HomePage() {
               viewport={{ once: true }}
               className="space-y-4"
             >
-              <h2 className="text-4xl md:text-5xl font-light tracking-widest font-serif">
+              <h2 className="text-3xl md:text-4xl font-light tracking-[0.2em] font-engravers leading-tight mb-6">
                 {settings.language === 'en' ? "Customize Your Own Dress" : t("customizeYourDress")}
               </h2>
               <div className="h-px w-24 bg-gradient-to-r from-purple-400 to-pink-400 mx-auto" />

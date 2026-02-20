@@ -665,7 +665,7 @@ export default function CategoryPage() {
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Collections
             </Link>
-            <h1 className="text-4xl md:text-5xl font-light tracking-wider mb-6" style={{ fontFamily: 'var(--font-playfair-display), var(--font-crimson-text), "Playfair Display", "Crimson Text", "Bodoni Moda", "Bodoni MT", Didot, serif' }}>
+            <h1 className="text-3xl md:text-4xl font-light tracking-wider mb-6 font-engravers">
               {categoryTitles[category as keyof typeof categoryTitles]}
             </h1>
             <motion.div

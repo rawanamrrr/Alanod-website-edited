@@ -855,8 +855,8 @@ useEffect(() => {
             className="text-center mb-16"
           >
             <div className="relative">
-              <h1 className="text-5xl md:text-6xl font-light tracking-wider mb-6 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent" style={{ fontFamily: 'var(--font-playfair-display), var(--font-crimson-text), "Playfair Display", "Crimson Text", "Bodoni Moda", "Bodoni MT", Didot, serif' }}>
-               {t("collectionsTitle")}
+              <h1 className="text-3xl md:text-4xl font-light tracking-wider mb-6 font-engravers">
+                {t("collections")}
               </h1>
               <motion.div
                 initial={{ width: 0 }}
@@ -894,15 +894,14 @@ useEffect(() => {
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center space-x-4">
                 <div className="relative">
-                  <h2 className="text-4xl font-light tracking-wider bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent" style={{ fontFamily: 'var(--font-playfair-display), var(--font-crimson-text), "Playfair Display", "Crimson Text", "Bodoni Moda", "Bodoni MT", Didot, serif' }}>
-                    {t("winterCollection")}
+                  <h2 className="text-2xl md:text-3xl font-light tracking-wider font-engravers bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
+                    {settings.language === 'en' ? 'WS26' : 'ربيع وصيف 26'}
                   </h2>
                   <motion.div
                     initial={{ width: 0 }}
-                    whileInView={{ width: "100%" }}
+                    animate={{ width: "100%" }}
                     transition={{ duration: 0.8, delay: 0.2 }}
-                    viewport={{ once: true }}
-                    className="h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 mt-2 rounded-full"
+                    className="h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full mt-2"
                   />
                 </div>
                 <div className="hidden sm:block text-sm text-gray-500 font-light tracking-wide">
@@ -989,15 +988,14 @@ useEffect(() => {
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center space-x-4">
                 <div className="relative">
-                  <h2 className="text-4xl font-light tracking-wider bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent" style={{ fontFamily: 'var(--font-playfair-display), var(--font-crimson-text), "Playfair Display", "Crimson Text", "Bodoni Moda", "Bodoni MT", Didot, serif' }}>
-                    {t("summerCollection")}
+                  <h2 className="text-2xl md:text-3xl font-light tracking-wider font-engravers bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
+                    {settings.language === 'en' ? 'FW26' : 'خريف وشتاء 26'}
                   </h2>
                   <motion.div
                     initial={{ width: 0 }}
-                    whileInView={{ width: "100%" }}
+                    animate={{ width: "100%" }}
                     transition={{ duration: 0.8, delay: 0.2 }}
-                    viewport={{ once: true }}
-                    className="h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 mt-2 rounded-full"
+                    className="h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full mt-2"
                   />
                 </div>
                 <div className="hidden sm:block text-sm text-gray-500 font-light tracking-wide">
