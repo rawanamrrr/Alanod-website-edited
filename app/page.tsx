@@ -9,12 +9,11 @@ import { useScroll } from "@/lib/scroll-context"
 import { motion, useViewportScroll, useTransform, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { ArrowRight, Sparkles, Star, ShoppingCart, Heart, X, Instagram, Facebook, Package, AlertCircle, MessageCircle } from "lucide-react"
+import { ArrowRight, Sparkles, ShoppingCart, Heart, X, Instagram, Facebook, Package, AlertCircle, MessageCircle } from "lucide-react"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { Badge } from "@/components/ui/badge"
 import { useFavorites } from "@/lib/favorites-context"
-import { StarRating } from "@/lib/star-rating"
 import { useCurrencyFormatter } from "@/hooks/use-currency"
 import { useCustomSize } from "@/hooks/use-custom-size"
 import type { SizeChartRow } from "@/components/custom-size-form"
@@ -641,12 +640,6 @@ export default function HomePage() {
                       <p className="text-gray-600 text-sm line-clamp-2">
                         {selectedProduct.description}
                       </p>
-                      <div className="flex items-center mt-1">
-                        <StarRating rating={selectedProduct.rating || 0} />
-                        <span className="text-xs text-gray-600 ml-2">
-                          ({selectedProduct.rating ? selectedProduct.rating.toFixed(1) : '0.0'})
-                        </span>
-                      </div>
                     </div>
                   </div>
 
@@ -1009,23 +1002,6 @@ export default function HomePage() {
                         </Link>
 
                         <div className="absolute bottom-4 left-4 right-4 z-[10] pointer-events-none text-white">
-                          <div className="flex items-center mb-1">
-                            <div className="flex items-center">
-                              {[...Array(5)].map((_, i) => (
-                                <Star
-                                  key={i}
-                                  className={`h-4 w-4 ${i < Math.floor(product.rating)
-                                    ? "fill-yellow-400 text-yellow-400"
-                                    : "text-gray-300"
-                                    }`}
-                                />
-                              ))}
-                            </div>
-                            <span className="text-xs ml-2">
-                              ({product.rating.toFixed(1)})
-                            </span>
-                          </div>
-
                           <h3 className="text-lg font-medium mb-1">
                             {product.name}
                           </h3>
@@ -1213,12 +1189,11 @@ export default function HomePage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
               viewport={{ once: true }}
               className="space-y-4"
             >
               <h2 className="text-4xl md:text-5xl font-light tracking-widest font-serif">
-                {t("customizeYourDress")}
+                {settings.language === 'en' ? "Customize Your Own Dress" : t("customizeYourDress")}
               </h2>
               <div className="h-px w-24 bg-gradient-to-r from-purple-400 to-pink-400 mx-auto" />
             </motion.div>
@@ -1226,11 +1201,13 @@ export default function HomePage() {
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+              transition={{ delay: 0.2 }}
               viewport={{ once: true }}
               className="text-lg md:text-xl text-zinc-300 leading-relaxed font-light"
             >
-              {t("customizeYourDressDesc")}
+              {settings.language === 'en' 
+                ? "Create a piece that exists only for you. Our team transforms your vision into a perfectly finished design crafted with precision, styled with intention." 
+                : t("customizeYourDressDesc")}
             </motion.p>
 
             <motion.div

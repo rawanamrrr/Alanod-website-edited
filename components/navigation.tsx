@@ -399,7 +399,7 @@ export function Navigation() {
                   <motion.div
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.3 }}
-                    className="flex items-center justify-center"
+                    className="flex items-center justify-center h-16 overflow-hidden"
                   >
                     <Image
                       src={getLogo()}

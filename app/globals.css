@@ -29,6 +29,7 @@
 
 @layer base {
   :root {
+    --font-engravers-gothic: "Engravers Gothic", "EngraversGothic BT", "Century Gothic", sans-serif;
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
@@ -125,6 +126,10 @@
     font-family: "Cairo", "Noto Serif Arabic", "Arabic Typesetting", "Simplified Arabic", "Amiri", serif !important;
     letter-spacing: 0 !important;
     font-weight: 400;
+  }
+
+  .font-engravers {
+    font-family: var(--font-engravers-gothic) !important;
   }
   
   /* RTL spacing fixes using CSS logical properties where possible */

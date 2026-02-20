@@ -31,7 +31,7 @@ export default function AboutPage() {
               <ArrowLeft className={`h-4 w-4 ${settings.language === "ar" ? "ml-2 rotate-180" : "mr-2"}`} />
               {t("backToHome")}
             </Link>
-            <h1 className="text-4xl md:text-5xl font-light tracking-[0.35em] font-serif uppercase mb-6">{t("ourStory")}</h1>
+            <h1 className="text-3xl md:text-4xl font-light tracking-[0.35em] font-engravers uppercase mb-6">{t("ourStory")}</h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               {t("aboutHeroDesc")}
             </p>
@@ -49,7 +49,7 @@ export default function AboutPage() {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl font-light tracking-wider font-serif mb-6">{t("newChapter")}</h2>
+              <h2 className="text-2xl font-light tracking-wider font-engravers mb-6 uppercase">{t("newChapter")}</h2>
               <p className="text-gray-600 mb-6 leading-relaxed">
                 {t("newChapterDesc1")}
               </p>

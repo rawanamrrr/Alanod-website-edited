@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
-import { ArrowLeft, Star, Heart, ShoppingCart, Truck, Shield, RotateCcw, ChevronDown, X, Package, Instagram, Facebook, ChevronLeft, ChevronRight, AlertCircle, MessageCircle } from "lucide-react"
+import { ArrowLeft, Heart, ShoppingCart, Truck, Shield, RotateCcw, ChevronDown, X, Package, Instagram, Facebook, ChevronLeft, ChevronRight, AlertCircle, MessageCircle } from "lucide-react"
 import { useParams } from "next/navigation"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
@@ -65,18 +65,6 @@ interface ProductDetail {
   packagePrice?: number
   packageOriginalPrice?: number
   giftPackageSizes?: any[]
-}
-
-interface Review {
-  _id: string
-  productId: string
-  originalProductId?: string
-  userId: string
-  userName: string
-  rating: number
-  comment: string
-  orderId: string
-  createdAt: string
 }
 
 const categoryTitles = {
@@ -175,8 +163,6 @@ export default function ProductDetailPage() {
       sleeveCm: "53",
     },
   ]
-
-  const [reviews, setReviews] = useState<Review[]>([])
   const [relatedProducts, setRelatedProducts] = useState<ProductDetail[]>([])
   const { state: authState } = useAuth()
   const [selectedProduct, setSelectedProduct] = useState<ProductDetail | null>(null)
@@ -469,26 +455,6 @@ export default function ProductDetailPage() {
     return id;
   }
 
-  const fetchReviewsForProduct = async (productIdFromApi: string) => {
-    try {
-      const baseProductId = getBaseProductId(productIdFromApi)
-      console.log("Product ID from API:", productIdFromApi)
-      console.log("URL product ID:", productId)
-      console.log("Fetching reviews for base product ID:", baseProductId)
-
-      const reviewsResponse = await fetch(`/api/reviews/product/${baseProductId}`)
-      if (reviewsResponse.ok) {
-        const reviewsData = await reviewsResponse.json()
-        console.log("Fetched reviews:", reviewsData.reviews?.length || 0)
-        setReviews(reviewsData.reviews || [])
-      } else {
-        console.error("Failed to fetch reviews:", await reviewsResponse.text())
-      }
-    } catch (error) {
-      console.error("Error fetching reviews:", error)
-    }
-  }
-
   const fetchProduct = async () => {
     try {
       // First try to get from cache instantly (synchronous cache read)
@@ -501,9 +467,6 @@ export default function ProductDetailPage() {
 
         // Set product immediately for instant render
         setProduct(data)
-
-        // Fire-and-forget reviews fetch so the page doesn't block on reviews
-        void fetchReviewsForProduct(data.id)
       }
     } catch (error) {
       console.error("Error fetching product:", error)
@@ -575,14 +538,14 @@ export default function ProductDetailPage() {
       <Navigation />
 
       {/* Product Detail */}
-      <section className="pt-28 md:pt-24 pb-20 sm:pb-16">
+      <section className="pt-20 md:pt-16 pb-20 sm:pb-16">
         <div className="container mx-auto px-4 md:px-6">
 
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="mb-8"
+            className="mb-2"
           >
             <Link
               href="/products"
@@ -612,43 +575,28 @@ export default function ProductDetailPage() {
             >
               <div className="relative rounded-xl overflow-hidden bg-gray-50">
                 <div
-                  className="w-full h-64 sm:h-80 lg:h-[500px] relative select-none"
+                  className="w-full relative select-none aspect-[3/4] lg:h-[600px] lg:aspect-auto overflow-y-auto scrollbar-hide snap-y snap-mandatory"
                   onMouseEnter={() => setIsHovered(true)}
                   onMouseLeave={() => setIsHovered(false)}
                   onKeyDown={handleKeyDown}
                   tabIndex={0}
                   role="img"
-                  aria-label="Product image gallery. Use the arrows or thumbnails to change image."
-                  style={{ userSelect: 'none', touchAction: 'none' }}
+                  aria-label="Product image gallery. Scroll vertically to view all images."
+                  style={{ userSelect: 'none', touchAction: 'pan-y' }}
                 >
-                  <Image
-                    src={product.images[selectedImage] || "/placeholder.svg"}
-                    alt={product.name}
-                    fill
-                    className={`object-contain transition-all duration-300 ${isHovered ? 'scale-105' : 'scale-100'}`}
-                  />
-                  {product.images?.length > 1 && (
-                    <>
-                      <button
-                        type="button"
-                        onClick={goToPrevImage}
-                        className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full bg-white/90 backdrop-blur shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-black"
-                        aria-label="Previous image"
-                      >
-                        <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6 text-gray-900" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={goToNextImage}
-                        className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full bg-white/90 backdrop-blur shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-black"
-                        aria-label="Next image"
-                      >
-                        <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6 text-gray-900" />
-                      </button>
-                    </>
-                  )}
+                  {product.images.map((image, idx) => (
+                    <div key={idx} className="relative w-full h-full snap-start flex-shrink-0">
+                      <Image
+                        src={image || "/placeholder.svg"}
+                        alt={`${product.name} ${idx + 1}`}
+                        fill
+                        className={`object-cover transition-all duration-300 ${isHovered ? 'scale-105' : 'scale-100'}`}
+                        priority={idx === 0}
+                      />
+                    </div>
+                  ))}
                 </div>
-                <div className="absolute top-3 left-3 lg:top-4 lg:left-4 space-y-2">
+                <div className="absolute top-3 left-3 lg:top-4 lg:left-4 space-y-2 pointer-events-none">
                   {product.isOutOfStock && (
                     <Badge className="bg-gradient-to-r from-red-600 to-red-800 text-white px-2 py-1 lg:px-3 lg:py-1 rounded-md font-medium text-xs lg:text-sm">
                       Out of Stock
@@ -673,7 +621,16 @@ export default function ProductDetailPage() {
                     key={index}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => setSelectedImage(index)}
+                    onClick={() => {
+                      setSelectedImage(index);
+                      const container = document.querySelector('[aria-label*="Product image gallery"]');
+                      if (container) {
+                        const target = container.children[index] as HTMLElement;
+                        if (target) {
+                          container.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
+                        }
+                      }
+                    }}
                     className={`flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border transition-all duration-200 ${selectedImage === index
                       ? "border-2 border-black shadow-md"
                       : "border-gray-200 hover:border-gray-400"
@@ -702,20 +659,6 @@ export default function ProductDetailPage() {
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 space-y-3 sm:space-y-0">
                   <div className="flex-1">
                     <h1 className="text-2xl sm:text-3xl lg:text-4xl font-light tracking-tight mb-2">{product.name}</h1>
-                    <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 mb-4">
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`h-4 w-4 sm:h-5 sm:w-5 ${i < Math.floor(product.rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
-                              }`}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-sm sm:text-base text-gray-600">
-                        ({product.rating}) • {product.reviews} reviews
-                      </span>
-                    </div>
                   </div>
                   <div className="text-2xl sm:text-3xl font-light text-left">
                     {(() => {
@@ -1247,72 +1190,6 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
-      {/* Reviews Section */}
-      <section className="py-12 sm:py-16 bg-gradient-to-b from-white to-gray-50">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-8 sm:mb-12">
-              <motion.h2
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-2xl sm:text-3xl font-light tracking-tight mb-2"
-              >
-                Customer Reviews
-              </motion.h2>
-              <div className="w-16 h-1 bg-amber-500 mx-auto rounded-full"></div>
-            </div>
-
-            {/* Reviews List */}
-            <div className="space-y-6 sm:space-y-8">
-              {reviews.length === 0 ? (
-                <div className="text-center py-8 sm:py-12 bg-white rounded-xl shadow-sm border border-gray-100">
-                  <div className="bg-gray-100 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Star className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400" />
-                  </div>
-                  <p className="text-gray-600 max-w-md mx-auto text-sm sm:text-base">
-                    No reviews yet for this gown.
-                  </p>
-                </div>
-              ) : (
-                reviews.map((review, index) => (
-                  <motion.div
-                    key={review._id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100"
-                  >
-                    <div className="flex items-start mb-4">
-                      <div className="bg-gray-200 border-2 border-dashed rounded-xl w-12 h-12 sm:w-16 sm:h-16 flex-shrink-0" />
-                      <div className="ml-3 sm:ml-4 flex-1 min-w-0">
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-                          <div>
-                            <h4 className="font-medium text-gray-900 text-sm sm:text-base">{review.userName}</h4>
-                            <p className="text-xs sm:text-sm text-gray-600">{new Date(review.createdAt).toLocaleDateString()}</p>
-                          </div>
-                          <div className="flex items-center">
-                            {[...Array(5)].map((_, i) => (
-                              <Star
-                                key={i}
-                                className={`h-4 w-4 sm:h-5 sm:w-5 ${i < review.rating
-                                  ? "fill-yellow-400 text-yellow-400"
-                                  : "text-gray-300"
-                                  }`}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <p className="text-gray-700 leading-relaxed text-sm sm:text-base">{review.comment}</p>
-                  </motion.div>
-                ))
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Related Products Section */}
       <section className="py-12 sm:py-16 bg-gray-50 pb-24 sm:pb-28">
         <div className="container mx-auto px-4 md:px-6">
@@ -1432,23 +1309,6 @@ export default function ProductDetailPage() {
                               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
                             </div>
                             <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3 md:p-4 text-white">
-                              <div className="flex items-center mb-1">
-                                <div className="flex items-center">
-                                  {[...Array(5)].map((_, i) => (
-                                    <Star
-                                      key={i}
-                                      className={`h-3 w-3 sm:h-4 sm:w-4 ${i < Math.floor(relatedProduct.rating)
-                                        ? "fill-yellow-400 text-yellow-400"
-                                        : "text-gray-300"
-                                        }`}
-                                    />
-                                  ))}
-                                </div>
-                                <span className="text-xs ml-1 sm:ml-2">
-                                  ({relatedProduct.rating.toFixed(1)})
-                                </span>
-                              </div>
-
                               <h3 className="text-xs sm:text-sm md:text-base lg:text-lg font-medium mb-1 line-clamp-2">
                                 {relatedProduct.name}
                               </h3>
@@ -1623,24 +1483,8 @@ export default function ProductDetailPage() {
                 </div>
                 <div>
                   <p className="text-gray-600 text-sm line-clamp-2">
-                    {selectedProduct.description}
+                    Choose your preferred size
                   </p>
-                  <div className="flex items-center mt-1">
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`h-4 w-4 ${i < Math.floor(selectedProduct.rating)
-                            ? "fill-yellow-400 text-yellow-400"
-                            : "text-gray-300"
-                            }`}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-xs text-gray-600 ml-2">
-                      ({selectedProduct.rating.toFixed(1)})
-                    </span>
-                  </div>
                 </div>
               </div>
 

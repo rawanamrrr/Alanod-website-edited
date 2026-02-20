@@ -7,7 +7,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Heart, ShoppingCart, Trash2, ArrowLeft, Star, X, Sparkles, Package, AlertCircle, MessageCircle } from "lucide-react"
+import { Heart, ShoppingCart, Trash2, ArrowLeft, X, Sparkles, Package, AlertCircle, MessageCircle } from "lucide-react"
 import { Navigation } from "@/components/navigation"
 import { useFavorites } from "@/lib/favorites-context"
 import { GiftPackageSelector } from "@/components/gift-package-selector"
@@ -360,23 +360,6 @@ export default function FavoritesPage() {
                   <p className="text-gray-600 text-sm line-clamp-2">
                     Choose your preferred size
                   </p>
-                                    <div className="flex items-center mt-1">
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`h-4 w-4 ${
-                            selectedProduct.rating && selectedProduct.rating > 0 && i < Math.floor(selectedProduct.rating)
-                              ? "fill-yellow-400 text-yellow-400"
-                              : "text-gray-300"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-xs text-gray-600 ml-2">
-                      ({selectedProduct.rating ? selectedProduct.rating.toFixed(1) : '0.0'})
-                    </span>
-                  </div>
                 </div>
               </div>
               
@@ -791,24 +774,6 @@ export default function FavoritesPage() {
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
                           </div>
                           <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                            <div className="flex items-center mb-1">
-                              <div className="flex items-center">
-                                {[0, 1, 2, 3, 4].map((i) => (
-                                  <Star
-                                    key={i}
-                                    className={`h-4 w-4 ${
-                                      i < (item.rating || 0)
-                                        ? "fill-yellow-400 text-yellow-400" 
-                                        : "text-gray-300"
-                                    }`}
-                                  />
-                                ))}
-                              </div>
-                              <span className="text-xs ml-2">
-                                ({(item.rating || 0).toFixed(1)})
-                              </span>
-                            </div>
-
                             <h3 className="text-lg font-medium mb-1">
                               {item.name}
                             </h3>

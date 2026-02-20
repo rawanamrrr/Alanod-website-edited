@@ -15,25 +15,39 @@ export default function CustomizePage() {
 
   const steps = [
     {
-      icon: <Palette className="h-8 w-8" />,
-      title: settings.language === 'en' ? "Consultation" : "الاستشارة",
+      icon: <Sparkles className="h-8 w-8" />,
+      title: settings.language === 'en' ? "Share Your Vision" : "شاركي رؤيتك",
       desc: settings.language === 'en' 
-        ? "Share your vision, preferences, and inspiration with our expert stylists." 
+        ? "Tell us your idea, inspiration, or occasion. You can upload references, mood boards, or simply describe your dream dress." 
         : "شاركي رؤيتك وتفضيلاتك وإلهامك مع خبراء التصميم لدينا."
     },
     {
-      icon: <Ruler className="h-8 w-8" />,
-      title: settings.language === 'en' ? "Measurements" : "القياسات",
+      icon: <MessageCircle className="h-8 w-4" />,
+      title: settings.language === 'en' ? "Personal Consultation" : "استشارة شخصية",
       desc: settings.language === 'en'
-        ? "We guide you through taking precise measurements for a perfect fit."
+        ? "Our friendly team and professional stylists will connect with you to refine the details — silhouette, fabric, color, fit, and finishing touches."
         : "نساعدك في أخذ قياسات دقيقة لضمان ملاءمة مثالية."
     },
     {
-      icon: <Scissors className="h-8 w-8" />,
-      title: settings.language === 'en' ? "Crafting" : "التنفيذ",
+      icon: <Palette className="h-8 w-8" />,
+      title: settings.language === 'en' ? "Design & Confirmation" : "التصميم والتأكيد",
       desc: settings.language === 'en'
-        ? "Our master artisans meticulously craft your gown by hand."
+        ? "We create a detailed concept and finalize every element with you before production begins."
+        : "نقوم بإنشاء مفهوم مفصل وتأكيد كل عنصر معك قبل بدء الإنتاج."
+    },
+    {
+      icon: <Scissors className="h-8 w-8" />,
+      title: settings.language === 'en' ? "Tailored Creation" : "تنفيذ مفصل",
+      desc: settings.language === 'en'
+        ? "Your dress is handcrafted with precision and care."
         : "يقوم حرفيونا المهرة بتنفيذ فستانك يدوياً بكل دقة."
+    },
+    {
+      icon: <Ruler className="h-8 w-8" />,
+      title: settings.language === 'en' ? "Final Fitting & Delivery" : "القياس النهائي والتسليم",
+      desc: settings.language === 'en'
+        ? "We ensure the fit is flawless and the piece is completed to perfection."
+        : "نضمن أن يكون المقاس مثاليًا ويتم الانتهاء من القطعة على أكمل وجه."
     }
   ]
 
@@ -62,11 +76,13 @@ export default function CustomizePage() {
               className="max-w-3xl mx-auto text-center"
             >
               <h1 className="text-4xl md:text-6xl font-light tracking-wide font-serif text-white">
-                {t("customizeYourDress")}
+                {settings.language === 'en' ? "Customize Your Own Dress" : t("customizeYourDress")}
               </h1>
 
               <p className="mt-6 text-base md:text-lg text-zinc-200/90 font-light leading-relaxed">
-                {t("customizeYourDressDesc")}
+                {settings.language === 'en' 
+                  ? "Create a piece that exists only for you. Our team transforms your vision into a perfectly finished design crafted with precision, styled with intention." 
+                  : t("customizeYourDressDesc")}
               </p>
 
               <div className="mt-10">
@@ -102,16 +118,16 @@ export default function CustomizePage() {
                 {settings.language === 'en' ? "Mastery in every stitch" : "إتقان في كل غرزة"}
               </motion.span>
               <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-8 font-serif text-gray-900">
-                {settings.language === 'en' ? "The Art of the Bespoke" : "فن التفصيل الخاص"}
+                {settings.language === 'en' ? "How It Works" : "فن التفصيل الخاص"}
               </h2>
               <p className="text-gray-500 text-lg font-light leading-relaxed">
                 {settings.language === 'en' 
-                  ? "Our couture journey is a collaborative masterpiece between our artisans and your imagination."
+                  ? "From the first sketch to the final stitch, our friendly team and experienced stylists will guide you every step of the way."
                   : "رحلة الكوتور لدينا هي عمل فني تعاوني بين حرفيينا وخيالكِ."}
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8 lg:gap-16">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-16">
               {steps.map((step, index) => (
                 <motion.div
                   key={index}
@@ -133,6 +149,30 @@ export default function CustomizePage() {
                   <p className="text-gray-500 leading-relaxed font-light">{step.desc}</p>
                 </motion.div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Experience Section */}
+        <section className="py-20 bg-gray-50/50">
+          <div className="container mx-auto px-6">
+            <div className="max-w-3xl mx-auto text-center">
+              <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-8 font-serif text-gray-900">
+                {settings.language === 'en' ? "Your Personal Styling Experience" : "تجربتك الشخصية في التنسيق"}
+              </h2>
+              <p className="text-gray-600 text-lg font-light leading-relaxed mb-8">
+                {settings.language === 'en' 
+                  ? "From the first sketch to the final stitch, our friendly team and experienced stylists will guide you every step of the way."
+                  : "من الرسم الأول إلى الغرزة الأخيرة، سيقوم فريقنا الودود ومنسقو الأزياء ذوو الخبرة بإرشادك في كل خطوة على الطريق."}
+              </p>
+              <div className="space-y-2">
+                <p className="text-gray-900 text-xl font-medium font-serif italic">
+                  {settings.language === 'en' ? "We don’t just design dresses" : "نحن لا نصمم الفساتين فحسب"}
+                </p>
+                <p className="text-gray-900 text-xl font-medium font-serif italic">
+                  {settings.language === 'en' ? "we finish them beautifully." : "بل ننهيها بجمال."}
+                </p>
+              </div>
             </div>
           </div>
         </section>

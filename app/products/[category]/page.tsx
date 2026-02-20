@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, Star, ShoppingCart, X, Heart, Instagram, Facebook, Package, AlertCircle, MessageCircle, Search } from "lucide-react"
+import { ArrowLeft, ShoppingCart, X, Heart, Instagram, Facebook, Package, AlertCircle, MessageCircle, Search } from "lucide-react"
 import { useParams } from "next/navigation"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
@@ -474,23 +474,6 @@ export default function CategoryPage() {
                   <p className="text-gray-600 text-sm line-clamp-2">
                     {selectedProduct.description}
                   </p>
-                  <div className="flex items-center mt-1">
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`h-4 w-4 ${
-                            i < Math.floor(selectedProduct.rating) 
-                              ? "fill-yellow-400 text-yellow-400" 
-                              : "text-gray-300"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-xs text-gray-600 ml-2">
-                      ({selectedProduct.rating.toFixed(1)})
-                    </span>
-                  </div>
                 </div>
               </div>
               
@@ -852,24 +835,6 @@ export default function CategoryPage() {
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
                               </div>
                               <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                                <div className="flex items-center mb-1">
-                                  <div className="flex items-center">
-                                    {[...Array(5)].map((_, i) => (
-                                      <Star
-                                        key={i}
-                                        className={`h-4 w-4 ${
-                                          i < Math.floor(product.rating) 
-                                            ? "fill-yellow-400 text-yellow-400" 
-                                            : "text-gray-300"
-                                        }`}
-                                      />
-                                    ))}
-                                  </div>
-                                  <span className="text-xs ml-2">
-                                    ({product.rating.toFixed(1)})
-                                  </span>
-                                </div>
-
                                 <h3 className="text-lg font-medium mb-1">
                                   {product.name}
                                 </h3>
