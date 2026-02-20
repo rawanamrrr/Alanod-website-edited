@@ -165,14 +165,14 @@ export default function CustomizePage() {
                   ? "From the first sketch to the final stitch, our friendly team and experienced stylists will guide you every step of the way."
                   : "من الرسم الأول إلى الغرزة الأخيرة، سيقوم فريقنا الودود ومنسقو الأزياء ذوو الخبرة بإرشادك في كل خطوة على الطريق."}
               </p>
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <p className="text-gray-900 text-lg font-medium font-engravers italic">
                   {settings.language === 'en' ? "We don’t just design dresses" : "نحن لا نصمم الفساتين فحسب"}
                 </p>
                 <p className="text-gray-900 text-lg font-medium font-engravers italic">
                   {settings.language === 'en' ? "we finish them beautifully." : "بل ننهيها بجمال."}
                 </p>
-              </div>
+              </div> */}
             </div>
           </div>
         </section>

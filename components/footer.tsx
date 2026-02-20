@@ -31,13 +31,13 @@ export function Footer() {
             <Image
               src="/Anod-logo-white.png"
               alt="Alanoud Alqadi Atelier"
-              width={864}
-              height={288}
-              className="h-24 w-auto"
+              width={1728}
+              height={576}
+              className="h-32 w-auto"
             />
-            <p className="text-gray-400 text-sm">
+            {/* <p className="text-gray-400 text-sm">
               {t("footerDesc")}
-            </p>
+            </p> */}
           </motion.div>
 
           <motion.div
