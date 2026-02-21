@@ -920,17 +920,8 @@ export default function HomePage() {
               transition={{ duration: 0.4, delay: 0.15 }}
               viewport={{ once: true }}
             >
-              {t("embraceYour")}
+              {settings.language === 'en' ? "Where Luxury Takes Form." : "حيث يتجسد الترف."}
             </motion.h1>
-            <motion.h2
-              className="text-3xl md:text-4xl font-light tracking-wider text-gray-900 font-engravers"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.25 }}
-              viewport={{ once: true }}
-            >
-              {t("soiréeMoment")}
-            </motion.h2>
             <motion.p
               className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed"
               initial={{ opacity: 0 }}
@@ -938,7 +929,9 @@ export default function HomePage() {
               transition={{ duration: 0.5, delay: 0.3 }}
               viewport={{ once: true }}
             >
-              {t("homeDescription")}
+              {settings.language === 'en' 
+                ? "Each Alanoud Alqadi creation is exquisitely handcrafted sculpted in detail, defined by precision, and designed to give you an unmatched, commanding presence." 
+                : "كل ابتكار من العنود القاضي هو تحفة فنية مصنوعة يدوياً ببراعة، ومنحوتة بدقة، ومصممة لتمنحك حضوراً قوياً لا يضاهى."}
             </motion.p>
 
             {/* Explore Collections Button */}
