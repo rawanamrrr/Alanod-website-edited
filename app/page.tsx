@@ -860,6 +860,43 @@ export default function HomePage() {
         )}
       </motion.section>
 
+      {/* Maintenance Message & WhatsApp Button - Directly under hero */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        viewport={{ once: true }}
+        className="bg-amber-50 border-y border-amber-200 py-10"
+      >
+        <div className="container mx-auto px-6 text-center">
+          <div className="flex flex-col items-center gap-6">
+            <div className="p-3 bg-amber-100 rounded-full">
+              <AlertCircle className="h-8 w-8 text-amber-600" />
+            </div>
+            <p className="text-amber-900 text-xl md:text-2xl font-medium leading-relaxed max-w-3xl">
+              {settings.language === 'en' 
+                ? "Our website is currently under maintenance. You can place your order via WhatsApp for now."
+                : "موقعنا حالياً قيد الصيانة. يمكنك تقديم طلبك عبر الواتساب في الوقت الحالي."}
+            </p>
+            <Button
+              onClick={() => {
+                const phoneNumber = "971502996885";
+                const message = settings.language === 'en' 
+                  ? "Hello, I would like to place an order." 
+                  : "مرحباً، أود تقديم طلب.";
+                const waUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+                window.open(waUrl, "_blank", "noopener,noreferrer");
+              }}
+              className="bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-full px-10 py-7 text-lg shadow-lg hover:shadow-[#25D366]/20 transition-all duration-300 group"
+            >
+              <MessageCircle className="mr-2 h-6 w-6" />
+              {settings.language === 'en' ? "Order via WhatsApp" : "اطلب عبر الواتساب"}
+              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </div>
+        </div>
+      </motion.div>
+
       {/* Text Content Section - Below Video */}
       <motion.section
         initial={{ opacity: 0 }}
