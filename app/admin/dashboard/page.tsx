@@ -34,6 +34,8 @@ import {
 import { Navigation } from "@/components/navigation"
 import { useAuth } from "@/lib/auth-context"
 import { toast } from "sonner"
+import { convertImageFileToWebP, uploadImageFile } from "@/lib/supabase-storage"
+import { SITE_IMAGE_KEYS, SITE_IMAGE_LABELS, DEFAULT_SITE_IMAGES } from "@/lib/site-images"
 
 interface ProductSize {
   size: string
@@ -141,6 +143,15 @@ interface Offer {
   createdAt: string
 }
 
+interface Collection {
+  _id: string
+  name: string
+  imageUrl: string
+  displayOrder: number
+  isActive: boolean
+  createdAt: string
+}
+
 const PRODUCTS_PER_PAGE = 10
 const ORDERS_PER_PAGE = 10
 
@@ -186,6 +197,16 @@ export default function AdminDashboard() {
     priority: "",
     expiresAt: "",
   })
+
+  // Site images (hero/section images across pages)
+  const [siteImages, setSiteImages] = useState<Record<string, string>>({})
+  const [uploadingSiteImageKey, setUploadingSiteImageKey] = useState<string | null>(null)
+
+  // Home page collections (name + image cards)
+  const [collections, setCollections] = useState<Collection[]>([])
+  const [editingCollection, setEditingCollection] = useState<Collection | null>(null)
+  const [collectionForm, setCollectionForm] = useState({ name: "", imageUrl: "" })
+  const [uploadingCollectionImage, setUploadingCollectionImage] = useState(false)
 
   const getAuthToken = () => {
     return authState.token || localStorage.getItem("token") || ""
@@ -318,9 +339,11 @@ export default function AdminDashboard() {
       setLoading(false)
 
       // Then load secondary data in the background (does not block initial render)
-      const [discountCodesRes, offersRes] = await Promise.all([
+      const [discountCodesRes, offersRes, siteImagesRes, collectionsRes] = await Promise.all([
         fetch("/api/discount-codes", fetchOptions),
         fetch("/api/offers", fetchOptions),
+        fetch("/api/site-images", { cache: "no-store" }),
+        fetch("/api/collections?all=true", fetchOptions),
       ])
 
       if (discountCodesRes.ok) {
@@ -331,6 +354,16 @@ export default function AdminDashboard() {
       if (offersRes.ok) {
         const offers = await offersRes.json()
         setOffers(offers)
+      }
+
+      if (siteImagesRes.ok) {
+        const images = await siteImagesRes.json()
+        setSiteImages(images)
+      }
+
+      if (collectionsRes.ok) {
+        const collections = await collectionsRes.json()
+        setCollections(collections)
       }
     } catch (error) {
       console.error("Error fetching data:", error)
@@ -619,6 +652,37 @@ export default function AdminDashboard() {
     }
   }
 
+  const handleSiteImageUpload = async (key: string, file: File) => {
+    setUploadingSiteImageKey(key)
+    try {
+      const converted = await convertImageFileToWebP(file, { maxDimension: 1600, quality: 0.7 })
+      const publicUrl = await uploadImageFile(converted, "site")
+
+      const token = getAuthToken()
+      const response = await fetch("/api/site-images", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ key, imageUrl: publicUrl }),
+      })
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}))
+        throw new Error(data?.error || "Failed to save image")
+      }
+
+      setSiteImages((prev) => ({ ...prev, [key]: publicUrl }))
+      toast.success("Image updated")
+    } catch (error: any) {
+      console.error("Error uploading site image:", error)
+      toast.error(error?.message || "Failed to upload image")
+    } finally {
+      setUploadingSiteImageKey(null)
+    }
+  }
+
   const handleCreateOffer = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
@@ -748,6 +812,139 @@ export default function AdminDashboard() {
       }
     } catch (error) {
       console.error("Error toggling offer status:", error)
+    }
+  }
+
+  const handleCollectionImageUpload = async (file: File) => {
+    setUploadingCollectionImage(true)
+    try {
+      const converted = await convertImageFileToWebP(file, { maxDimension: 1600, quality: 0.7 })
+      const publicUrl = await uploadImageFile(converted, "collections")
+      setCollectionForm((prev) => ({ ...prev, imageUrl: publicUrl }))
+    } catch (error: any) {
+      console.error("Error uploading collection image:", error)
+      toast.error(error?.message || "Failed to upload image")
+    } finally {
+      setUploadingCollectionImage(false)
+    }
+  }
+
+  const handleCreateCollection = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!collectionForm.name.trim() || !collectionForm.imageUrl) {
+      toast.error("Name and image are required")
+      return
+    }
+
+    try {
+      const token = getAuthToken()
+      const response = await fetch("/api/collections", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          name: collectionForm.name,
+          imageUrl: collectionForm.imageUrl,
+          displayOrder: collections.length,
+        }),
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        setCollections([...collections, result.collection])
+        setCollectionForm({ name: "", imageUrl: "" })
+        toast.success("Collection created")
+      } else {
+        const data = await response.json().catch(() => ({}))
+        toast.error(data?.error || "Failed to create collection")
+      }
+    } catch (error) {
+      console.error("Error creating collection:", error)
+      toast.error("Failed to create collection")
+    }
+  }
+
+  const handleUpdateCollection = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!editingCollection) return
+
+    try {
+      const token = getAuthToken()
+      const response = await fetch(`/api/collections?id=${editingCollection._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          name: collectionForm.name,
+          imageUrl: collectionForm.imageUrl,
+        }),
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        setCollections(collections.map((c) => (c._id === editingCollection._id ? result.collection : c)))
+        setEditingCollection(null)
+        setCollectionForm({ name: "", imageUrl: "" })
+        toast.success("Collection updated")
+      } else {
+        const data = await response.json().catch(() => ({}))
+        toast.error(data?.error || "Failed to update collection")
+      }
+    } catch (error) {
+      console.error("Error updating collection:", error)
+      toast.error("Failed to update collection")
+    }
+  }
+
+  const handleEditCollection = (collection: Collection) => {
+    setEditingCollection(collection)
+    setCollectionForm({ name: collection.name, imageUrl: collection.imageUrl })
+  }
+
+  const handleDeleteCollection = async (collectionId: string) => {
+    if (!confirm("Are you sure you want to delete this collection? This action cannot be undone.")) return
+
+    try {
+      const token = getAuthToken()
+      const response = await fetch(`/api/collections?id=${collectionId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (response.ok) {
+        setCollections(collections.filter((c) => c._id !== collectionId))
+      }
+    } catch (error) {
+      console.error("Error deleting collection:", error)
+    }
+  }
+
+  const handleToggleCollectionStatus = async (collection: Collection) => {
+    try {
+      const token = getAuthToken()
+      const response = await fetch(`/api/collections?id=${collection._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          isActive: !collection.isActive,
+        }),
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        setCollections(collections.map((c) => (c._id === collection._id ? result.collection : c)))
+      }
+    } catch (error) {
+      console.error("Error toggling collection status:", error)
     }
   }
 
@@ -1006,6 +1203,8 @@ export default function AdminDashboard() {
                   <TabsTrigger value="orders" className="whitespace-nowrap text-xs sm:text-sm px-3 py-1.5">Orders</TabsTrigger>
                   <TabsTrigger value="discounts" className="whitespace-nowrap text-xs sm:text-sm px-3 py-1.5">Discounts</TabsTrigger>
                   <TabsTrigger value="offers" className="whitespace-nowrap text-xs sm:text-sm px-3 py-1.5">Offers</TabsTrigger>
+                  <TabsTrigger value="siteImages" className="whitespace-nowrap text-xs sm:text-sm px-3 py-1.5">Site Images</TabsTrigger>
+                  <TabsTrigger value="collections" className="whitespace-nowrap text-xs sm:text-sm px-3 py-1.5">Collections</TabsTrigger>
                   <TabsTrigger value="analytics" className="whitespace-nowrap text-xs sm:text-sm px-3 py-1.5">Analytics</TabsTrigger>
               </TabsList>
               </div>
@@ -1936,6 +2135,206 @@ export default function AdminDashboard() {
                                 </div>
                               </div>
                             )
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="siteImages">
+                <Card>
+                  <CardHeader className="p-4 sm:p-6">
+                    <CardTitle className="text-lg">Page Images</CardTitle>
+                    <p className="text-sm text-gray-500">
+                      Upload a new image to replace the hero/section image on each page.
+                    </p>
+                  </CardHeader>
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      {Object.entries(SITE_IMAGE_KEYS).map(([, key]) => {
+                        const currentUrl = siteImages[key] || DEFAULT_SITE_IMAGES[key as keyof typeof DEFAULT_SITE_IMAGES]
+                        const isUploading = uploadingSiteImageKey === key
+                        return (
+                          <div key={key} className="border rounded-lg p-4 space-y-3">
+                            <Label className="text-sm font-medium">
+                              {SITE_IMAGE_LABELS[key as keyof typeof SITE_IMAGE_LABELS]}
+                            </Label>
+                            <div className="relative w-full h-40 rounded-md overflow-hidden bg-gray-100">
+                              <Image
+                                src={currentUrl}
+                                alt={key}
+                                fill
+                                className="object-cover"
+                                unoptimized
+                              />
+                              {isUploading && (
+                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                  <RefreshCw className="h-5 w-5 text-white animate-spin" />
+                                </div>
+                              )}
+                            </div>
+                            <Input
+                              type="file"
+                              accept="image/*"
+                              disabled={isUploading}
+                              onChange={(e) => {
+                                const file = e.target.files?.[0]
+                                if (file) handleSiteImageUpload(key, file)
+                                e.target.value = ""
+                              }}
+                              className="text-xs"
+                            />
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="collections">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Create/Edit Collection Form */}
+                  <Card>
+                    <CardHeader className="p-4 sm:p-6">
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="flex items-center text-lg">
+                          {editingCollection ? "Edit Collection" : "Add Collection"}
+                        </CardTitle>
+                        {editingCollection && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setEditingCollection(null)
+                              setCollectionForm({ name: "", imageUrl: "" })
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                        )}
+                      </div>
+                      <p className="text-sm text-gray-500">
+                        These cards appear in the "Collections" section on the home page.
+                      </p>
+                    </CardHeader>
+                    <CardContent className="p-4 sm:p-6">
+                      <form
+                        onSubmit={editingCollection ? handleUpdateCollection : handleCreateCollection}
+                        className="space-y-4"
+                      >
+                        <div>
+                          <Label htmlFor="collectionName" className="text-sm">Collection Name</Label>
+                          <Input
+                            id="collectionName"
+                            value={collectionForm.name}
+                            onChange={(e) => setCollectionForm({ ...collectionForm, name: e.target.value })}
+                            placeholder="WS26"
+                            className="mt-1"
+                          />
+                        </div>
+
+                        <div>
+                          <Label className="text-sm">Collection Image</Label>
+                          <div className="relative w-full h-40 rounded-md overflow-hidden bg-gray-100 mt-1 mb-2">
+                            {collectionForm.imageUrl ? (
+                              <Image
+                                src={collectionForm.imageUrl}
+                                alt="Collection preview"
+                                fill
+                                className="object-cover"
+                                unoptimized
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                                No image selected
+                              </div>
+                            )}
+                            {uploadingCollectionImage && (
+                              <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                <RefreshCw className="h-5 w-5 text-white animate-spin" />
+                              </div>
+                            )}
+                          </div>
+                          <Input
+                            type="file"
+                            accept="image/*"
+                            disabled={uploadingCollectionImage}
+                            onChange={(e) => {
+                              const file = e.target.files?.[0]
+                              if (file) handleCollectionImageUpload(file)
+                              e.target.value = ""
+                            }}
+                            className="text-xs"
+                          />
+                        </div>
+
+                        <Button type="submit" className="w-full bg-black text-white hover:bg-gray-800">
+                          {editingCollection ? "Update Collection" : "Add Collection"}
+                        </Button>
+                      </form>
+                    </CardContent>
+                  </Card>
+
+                  {/* Collections List */}
+                  <Card>
+                    <CardHeader className="p-4 sm:p-6">
+                      <CardTitle className="text-lg">Collections ({collections.length})</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-4 sm:p-6">
+                      {collections.length === 0 ? (
+                        <div className="text-center py-8">
+                          <p className="text-gray-600">No collections created yet</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-4 max-h-[400px] sm:max-h-96 overflow-y-auto">
+                          {collections.map((collection) => (
+                            <div key={collection._id} className="p-3 sm:p-4 border rounded-lg flex gap-3">
+                              <div className="relative w-16 h-16 rounded-md overflow-hidden flex-shrink-0 bg-gray-100">
+                                <Image
+                                  src={collection.imageUrl}
+                                  alt={collection.name}
+                                  fill
+                                  className="object-cover"
+                                  unoptimized
+                                />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center justify-between mb-2 gap-2">
+                                  <span className="font-medium text-sm sm:text-base truncate">{collection.name}</span>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => handleToggleCollectionStatus(collection)}
+                                    className={`${collection.isActive ? "text-green-600" : "text-gray-500"} text-xs flex-shrink-0`}
+                                  >
+                                    {collection.isActive ? "Active" : "Inactive"}
+                                  </Button>
+                                </div>
+                                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => handleEditCollection(collection)}
+                                    className="w-full sm:w-auto text-xs"
+                                  >
+                                    <Edit className="h-3 w-3 mr-2" />
+                                    Edit
+                                  </Button>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="text-red-600 hover:text-red-700 w-full sm:w-auto text-xs"
+                                    onClick={() => handleDeleteCollection(collection._id)}
+                                  >
+                                    <Trash2 className="h-3 w-3 mr-2" />
+                                    Delete
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
                           ))}
                         </div>
                       )}

@@ -1,15 +1,40 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { Instagram, Mail, Phone } from "lucide-react"
 import { useLocale } from "@/lib/locale-context"
 import { useTranslation } from "@/lib/translations"
+import { openWhatsAppWithMessage, getCollectionOrderMessage } from "@/lib/whatsapp"
+
+type FooterCollection = { id: string; name: string }
 
 export function Footer() {
   const { settings } = useLocale()
   const t = useTranslation(settings.language)
+  const [collections, setCollections] = useState<FooterCollection[]>([])
+
+  useEffect(() => {
+    let cancelled = false
+
+    fetch("/api/collections", { cache: "no-store" })
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => {
+        if (cancelled) return
+        setCollections(data.map((c: any) => ({ id: c.id, name: c.name })))
+      })
+      .catch(() => {})
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const handleCollectionClick = () => {
+    openWhatsAppWithMessage("971502996885", getCollectionOrderMessage(settings.language))
+  }
 
   return (
     <motion.footer
@@ -71,12 +96,16 @@ export function Footer() {
           >
             <h3 className="font-medium mb-4">{t("collectionsFooter")}</h3>
             <div className="space-y-2 text-sm">
-              <Link href="/products/winter" className="block text-gray-400 hover:text-white transition-colors">
-                {t("winterCollection")}
-              </Link>
-              <Link href="/products/summer" className="block text-gray-400 hover:text-white transition-colors">
-                {t("summerCollection")}
-              </Link>
+              {collections.map((collection) => (
+                <button
+                  key={collection.id}
+                  type="button"
+                  onClick={handleCollectionClick}
+                  className="block text-gray-400 hover:text-white transition-colors text-left"
+                >
+                  {collection.name}
+                </button>
+              ))}
             </div>
           </motion.div>
 

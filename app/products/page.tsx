@@ -68,6 +68,8 @@ interface Product {
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
+  const [collectionsByCategory, setCollectionsByCategory] = useState<Record<string, string>>({})
+  const [extraCollections, setExtraCollections] = useState<{ id: string; name: string; imageUrl: string }[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [selectedSize, setSelectedSize] = useState<ProductSize | null>(null)
@@ -241,6 +243,29 @@ export default function ProductsPage() {
 
 useEffect(() => {
   fetchProducts();
+}, []);
+
+useEffect(() => {
+  let cancelled = false
+
+  fetch("/api/collections", { cache: "no-store" })
+    .then((res) => (res.ok ? res.json() : []))
+    .then((data) => {
+      if (cancelled) return
+      // Collections are ordered by display order: 1st -> Winter section, 2nd -> Summer section
+      const map: Record<string, string> = {}
+      if (data[0]?.name) map.winter = data[0].name
+      if (data[1]?.name) map.summer = data[1].name
+      setCollectionsByCategory(map)
+      setExtraCollections(
+        (data as any[]).slice(2).map((c) => ({ id: c.id, name: c.name, imageUrl: c.imageUrl }))
+      )
+    })
+    .catch(() => {})
+
+  return () => {
+    cancelled = true
+  }
 }, []);
 
 useEffect(() => {
@@ -858,12 +883,6 @@ useEffect(() => {
               <h1 className="text-3xl md:text-4xl font-light tracking-wider mb-6 font-engravers">
                 {t("collections")}
               </h1>
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: "200px" }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                className="h-1 bg-gradient-to-r from-purple-400 to-pink-400 mx-auto my-6 rounded-full"
-              />
             </div>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-8">
               {t("collectionsDesc")}
@@ -895,14 +914,8 @@ useEffect(() => {
               <div className="flex items-center space-x-4">
                 <div className="relative">
                   <h2 className="text-2xl md:text-3xl font-light tracking-wider font-engravers bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
-                    {settings.language === 'en' ? 'WS26' : 'ربيع وصيف 26'}
+                    {collectionsByCategory.winter}
                   </h2>
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: "100%" }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                    className="h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full mt-2"
-                  />
                 </div>
                 <div className="hidden sm:block text-sm text-gray-500 font-light tracking-wide">
                   {t("elegantWinterPieces")}
@@ -989,14 +1002,8 @@ useEffect(() => {
               <div className="flex items-center space-x-4">
                 <div className="relative">
                   <h2 className="text-2xl md:text-3xl font-light tracking-wider font-engravers bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
-                    {settings.language === 'en' ? 'FW26' : 'خريف وشتاء 26'}
+                    {collectionsByCategory.summer}
                   </h2>
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: "100%" }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                    className="h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full mt-2"
-                  />
                 </div>
                 <div className="hidden sm:block text-sm text-gray-500 font-light tracking-wide">
                   {t("elegantSummerPieces")}
@@ -1069,7 +1076,45 @@ useEffect(() => {
         </div>
       </section>
 
+      {/* Additional collections (no linked product category yet) */}
+      {extraCollections.map((collection, index) => (
+        <section key={collection.id} className={`py-16 ${index % 2 === 0 ? "bg-gray-50" : "bg-white"}`}>
+          <div className="container mx-auto px-6">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="mb-12"
+            >
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center space-x-4">
+                  <div className="relative">
+                    <h2 className="text-2xl md:text-3xl font-light tracking-wider font-engravers bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
+                      {collection.name}
+                    </h2>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Button
+                    onClick={fetchProducts}
+                    variant="outline"
+                    size="sm"
+                    className={`border-gray-300 text-gray-600 hover:bg-gray-50 ${settings.language === "ar" ? "flex-row-reverse" : ""}`}
+                  >
+                    <RefreshCw className={`h-4 w-4 ${settings.language === "ar" ? "ml-2" : "mr-2"}`} />
+                    {t("refresh")}
+                  </Button>
+                </div>
+              </div>
 
+              <p className="text-gray-500 text-sm">
+                {settings.language === "en" ? "No products in this collection yet." : "لا توجد منتجات في هذه المجموعة بعد."}
+              </p>
+            </motion.div>
+          </div>
+        </section>
+      ))}
 
       {/* Gift Package Selector Modal */}
       {showGiftPackageSelector && selectedProduct && (

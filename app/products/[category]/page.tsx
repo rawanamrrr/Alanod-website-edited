@@ -89,6 +89,27 @@ export default function CategoryPage() {
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [totalCount, setTotalCount] = useState(0)
+  const [collectionsByCategory, setCollectionsByCategory] = useState<Record<string, string>>({})
+
+  useEffect(() => {
+    let cancelled = false
+
+    fetch("/api/collections", { cache: "no-store" })
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => {
+        if (cancelled) return
+        // Collections are ordered by display order: 1st -> Winter section, 2nd -> Summer section
+        const map: Record<string, string> = {}
+        if (data[0]?.name) map.winter = data[0].name
+        if (data[1]?.name) map.summer = data[1].name
+        setCollectionsByCategory(map)
+      })
+      .catch(() => {})
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   const {
     isCustomSizeMode,
@@ -666,14 +687,8 @@ export default function CategoryPage() {
               Back to Collections
             </Link>
             <h1 className="text-3xl md:text-4xl font-light tracking-wider mb-6 font-engravers">
-              {categoryTitles[category as keyof typeof categoryTitles]}
+              {collectionsByCategory[category]}
             </h1>
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: "150px" }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="h-1 bg-gradient-to-r from-purple-400 to-pink-400 mx-auto my-6 rounded-full"
-            />
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               {categoryDescriptions[category as keyof typeof categoryDescriptions]}
             </p>
@@ -698,7 +713,7 @@ export default function CategoryPage() {
                 id="category-search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={`Search ${categoryTitles[category as keyof typeof categoryTitles]} products...`}
+                placeholder={`Search ${collectionsByCategory[category] || ""} products...`}
                 className={`w-full rounded-full border border-gray-200 bg-white/90
                   py-3 text-sm md:text-base tracking-wide
                   focus-visible:ring-0 focus-visible:border-black

@@ -583,12 +583,6 @@ export default function FavoritesPage() {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-3xl font-light tracking-wider mb-2">{t("myFavorites")}</h1>
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: "100px" }}
-                  transition={{ duration: 0.8, delay: 0.3 }}
-                  className="h-1 bg-gradient-to-r from-purple-400 to-pink-400 mb-4 rounded-full"
-                />
                 <p className="text-gray-600">
                   {favoritesState.count === 0
                     ? t("noFavoritesDesc")
@@ -642,12 +636,6 @@ export default function FavoritesPage() {
                   </div>
                 </div>
                 <h2 className="text-2xl font-light tracking-wider mb-4 text-purple-700">{t("noFavoritesYet")}</h2>
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: "100px" }}
-                  transition={{ duration: 0.8, delay: 0.5 }}
-                  className="h-1 bg-gradient-to-r from-purple-400 to-pink-400 mx-auto my-6 rounded-full"
-                />
                 <p className="text-gray-600 mb-8 max-w-md mx-auto">
                   {t("noFavoritesDesc")}
                 </p>

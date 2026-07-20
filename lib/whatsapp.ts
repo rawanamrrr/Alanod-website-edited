@@ -162,3 +162,17 @@ export function openWhatsAppOrder(payload: WhatsAppOrderPayload) {
   const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
   window.open(waUrl, "_blank", "noopener,noreferrer")
 }
+
+export function getCollectionOrderMessage(language: string) {
+  return language === "ar"
+    ? `عميلتنا العزيزة\n\nنفضل أن يتم تقديم جميع الطلبات عبر الواتساب لضمان حصولك على أفضل تجربة ممكنة.\n\nيتيح لك الطلب عبر الواتساب التواصل المباشر مع فريقنا، وطرح جميع استفساراتك بكل سهولة وراحة، مع الحصول على متابعة شخصية في كل خطوة من خطوات الطلب.\n\nفريقنا المحترف والمتميز موجود دائمًا لخدمتك، ونسعى لأن نجعل تجربتك معنا سلسة، مريحة، ومميزة من البداية وحتى استلام فستانك بكل ثقة واطمئنان.`
+    : `Dear Valued Customer\n\nWe prefer that all orders are placed through WhatsApp to ensure you enjoy the best possible experience.\n\nOrdering via WhatsApp allows you to communicate directly with our team, ask any questions with ease, and receive personalized assistance throughout every step of the process.\n\nOur dedicated and professional team is always here to make your shopping experience smooth, enjoyable, and truly memorable. We look forward to helping you create the perfect dress with confidence and peace of mind.`
+}
+
+export function openWhatsAppWithMessage(phoneNumber: string, message: string) {
+  if (typeof window === "undefined") return
+
+  const phone = normalizePhoneNumber(phoneNumber)
+  const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
+  window.open(waUrl, "_blank", "noopener,noreferrer")
+}

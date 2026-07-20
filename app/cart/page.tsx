@@ -56,12 +56,6 @@ export default function CartPage() {
                   </div>
                 </div>
                 <h1 className="text-2xl sm:text-3xl font-light tracking-wider mb-4 text-purple-700">{t("yourCartIsEmpty")}</h1>
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: "100px" }}
-                  transition={{ duration: 0.8, delay: 0.3 }}
-                  className="h-1 bg-gradient-to-r from-purple-400 to-pink-400 mx-auto my-6 rounded-full"
-                />
                 <p className="text-gray-600 mb-8 text-sm sm:text-base">{t("cartEmptyDesc")}</p>
               </motion.div>
               <motion.div
@@ -111,12 +105,6 @@ export default function CartPage() {
               {t("continueShopping")}
             </Link>
             <h1 className="text-2xl sm:text-3xl font-light tracking-wider mb-2">{t("shoppingCart")}</h1>
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: "100px" }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="h-1 bg-gradient-to-r from-purple-400 to-pink-400 mb-4 rounded-full"
-            />
             <p className="text-gray-600 text-sm sm:text-base">
               {state.items.length} item{state.items.length !== 1 ? "s" : ""} in your cart
             </p>

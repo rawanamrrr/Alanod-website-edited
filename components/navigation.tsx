@@ -14,12 +14,16 @@ import { useScroll } from "@/lib/scroll-context"
 import { OffersBanner } from "@/components/offers-banner"
 import { useLocale } from "@/lib/locale-context"
 import { useTranslation } from "@/lib/translations"
+import { openWhatsAppWithMessage, getCollectionOrderMessage } from "@/lib/whatsapp"
+
+type NavCollection = { id: string; name: string }
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   const [showUserMenu, setShowUserMenu] = useState(false)
   const [productsOpen, setProductsOpen] = useState(false)
   const [showCurrencySelector, setShowCurrencySelector] = useState(false)
+  const [collections, setCollections] = useState<NavCollection[]>([])
   const currencySelectorRef = useRef<HTMLDivElement>(null)
   const mobileMenuRef = useRef<HTMLDivElement>(null)
   const hasScrolledToCurrency = useRef(false)
@@ -32,6 +36,26 @@ export function Navigation() {
 
   // Check if we're on the home page
   const isHomePage = pathname === "/"
+
+  useEffect(() => {
+    let cancelled = false
+
+    fetch("/api/collections", { cache: "no-store" })
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => {
+        if (cancelled) return
+        setCollections(data.map((c: any) => ({ id: c.id, name: c.name })))
+      })
+      .catch(() => {})
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const handleCollectionClick = () => {
+    openWhatsAppWithMessage("971502996885", getCollectionOrderMessage(settings.language))
+  }
 
   // Close mobile menu when clicking outside
   useEffect(() => {
@@ -375,8 +399,16 @@ export function Navigation() {
                         </Link>
                         <div className="absolute top-full left-0 mt-2 w-48 bg-white shadow-lg rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                             <div className="py-2">
-                                <Link href="/products/winter" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-black transition-colors">{t("winterCollection")}</Link>
-                                <Link href="/products/summer" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-black transition-colors">{t("summerCollection")}</Link>
+                                {collections.map((collection) => (
+                                    <button
+                                        key={collection.id}
+                                        type="button"
+                                        onClick={handleCollectionClick}
+                                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-black transition-colors"
+                                    >
+                                        {collection.name}
+                                    </button>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -594,28 +626,23 @@ export function Navigation() {
                    {/* Menu Content */}
                    <div className="px-6 py-6 pb-24 space-y-0">
                      {/* Collection Items with Arrows */}
-                     <Link
-                       href="/products/winter"
-                       className="flex items-center justify-between py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors"
-                       onClick={() => setIsOpen(false)}
-                     >
-                       <span className="text-sm font-light tracking-wide text-black uppercase" style={{ letterSpacing: '0.1em' }}>
-                         {t("winterCollection").toUpperCase()}
-                       </span>
-                       <ChevronRight className="h-4 w-4 text-gray-400" />
-                     </Link>
-                     
-                     <Link
-                       href="/products/summer"
-                       className="flex items-center justify-between py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors"
-                       onClick={() => setIsOpen(false)}
-                     >
-                       <span className="text-sm font-light tracking-wide text-black uppercase" style={{ letterSpacing: '0.1em' }}>
-                         {t("summerCollection").toUpperCase()}
-                       </span>
-                       <ChevronRight className="h-4 w-4 text-gray-400" />
-                     </Link>
-                     
+                     {collections.map((collection) => (
+                       <button
+                         key={collection.id}
+                         type="button"
+                         className="flex items-center justify-between w-full py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors"
+                         onClick={() => {
+                           setIsOpen(false)
+                           handleCollectionClick()
+                         }}
+                       >
+                         <span className="text-sm font-light tracking-wide text-black uppercase" style={{ letterSpacing: '0.1em' }}>
+                           {collection.name.toUpperCase()}
+                         </span>
+                         <ChevronRight className="h-4 w-4 text-gray-400" />
+                       </button>
+                     ))}
+
                      <Link
                        href="/products"
                        className="flex items-center justify-between py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors"
