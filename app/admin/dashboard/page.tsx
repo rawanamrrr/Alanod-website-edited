@@ -34,7 +34,7 @@ import {
 import { Navigation } from "@/components/navigation"
 import { useAuth } from "@/lib/auth-context"
 import { toast } from "sonner"
-import { convertImageFileToWebP, uploadImageFile } from "@/lib/supabase-storage"
+import { uploadImageFile } from "@/lib/supabase-storage"
 import { SITE_IMAGE_KEYS, SITE_IMAGE_LABELS, DEFAULT_SITE_IMAGES } from "@/lib/site-images"
 
 interface ProductSize {
@@ -671,13 +671,11 @@ export default function AdminDashboard() {
   const handleSiteImageUpload = async (key: string, file: File) => {
     setUploadingSiteImageKey(key)
     try {
-      const converted = await convertImageFileToWebP(file, { maxDimension: 1600, quality: 0.7 })
-
-      if (converted.size > 8 * 1024 * 1024) {
+      if (file.size > 8 * 1024 * 1024) {
         throw new Error("This photo is too large to upload — please choose a smaller image or take a lower-resolution photo.")
       }
 
-      const publicUrl = await uploadImageFile(converted, "site")
+      const publicUrl = await uploadImageFile(file, "site")
       setPendingSiteImages((prev) => ({ ...prev, [key]: publicUrl }))
     } catch (error: any) {
       console.error("Error uploading site image:", error)
@@ -858,13 +856,11 @@ export default function AdminDashboard() {
   const handleCollectionImageUpload = async (file: File) => {
     setUploadingCollectionImage(true)
     try {
-      const converted = await convertImageFileToWebP(file, { maxDimension: 1600, quality: 0.7 })
-
-      if (converted.size > 8 * 1024 * 1024) {
+      if (file.size > 8 * 1024 * 1024) {
         throw new Error("This photo is too large to upload — please choose a smaller image or take a lower-resolution photo.")
       }
 
-      const publicUrl = await uploadImageFile(converted, "collections")
+      const publicUrl = await uploadImageFile(file, "collections")
       setCollectionForm((prev) => ({ ...prev, imageUrl: publicUrl }))
     } catch (error: any) {
       console.error("Error uploading collection image:", error)
