@@ -200,7 +200,9 @@ export default function AdminDashboard() {
 
   // Site images (hero/section images across pages)
   const [siteImages, setSiteImages] = useState<Record<string, string>>({})
+  const [pendingSiteImages, setPendingSiteImages] = useState<Record<string, string>>({})
   const [uploadingSiteImageKey, setUploadingSiteImageKey] = useState<string | null>(null)
+  const [savingSiteImageKey, setSavingSiteImageKey] = useState<string | null>(null)
 
   // Home page collections (name + image cards)
   const [collections, setCollections] = useState<Collection[]>([])
@@ -209,7 +211,19 @@ export default function AdminDashboard() {
   const [uploadingCollectionImage, setUploadingCollectionImage] = useState(false)
 
   const getAuthToken = () => {
-    return authState.token || localStorage.getItem("token") || ""
+    if (authState.token) return authState.token
+
+    // Fallback for the brief window before auth context finishes rehydrating
+    // (more noticeable on slower mobile connections/devices).
+    try {
+      const raw = localStorage.getItem("sense_auth")
+      if (raw) {
+        const parsed = JSON.parse(raw)
+        if (parsed?.token) return parsed.token as string
+      }
+    } catch {}
+
+    return ""
   }
 
   const formatDate = (dateString: string) => {
@@ -652,12 +666,33 @@ export default function AdminDashboard() {
     }
   }
 
+  // Same pattern as collections: upload only stores a local preview URL.
+  // Saving to the database happens as a separate, explicit step.
   const handleSiteImageUpload = async (key: string, file: File) => {
     setUploadingSiteImageKey(key)
     try {
       const converted = await convertImageFileToWebP(file, { maxDimension: 1600, quality: 0.7 })
-      const publicUrl = await uploadImageFile(converted, "site")
 
+      if (converted.size > 8 * 1024 * 1024) {
+        throw new Error("This photo is too large to upload — please choose a smaller image or take a lower-resolution photo.")
+      }
+
+      const publicUrl = await uploadImageFile(converted, "site")
+      setPendingSiteImages((prev) => ({ ...prev, [key]: publicUrl }))
+    } catch (error: any) {
+      console.error("Error uploading site image:", error)
+      toast.error(error?.message || "Failed to upload image")
+    } finally {
+      setUploadingSiteImageKey(null)
+    }
+  }
+
+  const handleSaveSiteImage = async (key: string) => {
+    const publicUrl = pendingSiteImages[key]
+    if (!publicUrl) return
+
+    setSavingSiteImageKey(key)
+    try {
       const token = getAuthToken()
       const response = await fetch("/api/site-images", {
         method: "PUT",
@@ -674,12 +709,17 @@ export default function AdminDashboard() {
       }
 
       setSiteImages((prev) => ({ ...prev, [key]: publicUrl }))
+      setPendingSiteImages((prev) => {
+        const next = { ...prev }
+        delete next[key]
+        return next
+      })
       toast.success("Image updated")
     } catch (error: any) {
-      console.error("Error uploading site image:", error)
-      toast.error(error?.message || "Failed to upload image")
+      console.error("Error saving site image:", error)
+      toast.error(error?.message || "Failed to save image")
     } finally {
-      setUploadingSiteImageKey(null)
+      setSavingSiteImageKey(null)
     }
   }
 
@@ -819,6 +859,11 @@ export default function AdminDashboard() {
     setUploadingCollectionImage(true)
     try {
       const converted = await convertImageFileToWebP(file, { maxDimension: 1600, quality: 0.7 })
+
+      if (converted.size > 8 * 1024 * 1024) {
+        throw new Error("This photo is too large to upload — please choose a smaller image or take a lower-resolution photo.")
+      }
+
       const publicUrl = await uploadImageFile(converted, "collections")
       setCollectionForm((prev) => ({ ...prev, imageUrl: publicUrl }))
     } catch (error: any) {
@@ -2154,8 +2199,10 @@ export default function AdminDashboard() {
                   <CardContent className="p-4 sm:p-6">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       {Object.entries(SITE_IMAGE_KEYS).map(([, key]) => {
-                        const currentUrl = siteImages[key] || DEFAULT_SITE_IMAGES[key as keyof typeof DEFAULT_SITE_IMAGES]
+                        const pendingUrl = pendingSiteImages[key]
+                        const currentUrl = pendingUrl || siteImages[key] || DEFAULT_SITE_IMAGES[key as keyof typeof DEFAULT_SITE_IMAGES]
                         const isUploading = uploadingSiteImageKey === key
+                        const isSaving = savingSiteImageKey === key
                         return (
                           <div key={key} className="border rounded-lg p-4 space-y-3">
                             <Label className="text-sm font-medium">
@@ -2186,6 +2233,17 @@ export default function AdminDashboard() {
                               }}
                               className="text-xs"
                             />
+                            {pendingUrl && (
+                              <Button
+                                type="button"
+                                size="sm"
+                                disabled={isSaving}
+                                onClick={() => handleSaveSiteImage(key)}
+                                className="w-full bg-black text-white hover:bg-gray-800"
+                              >
+                                {isSaving ? "Saving..." : "Save"}
+                              </Button>
+                            )}
                           </div>
                         )
                       })}

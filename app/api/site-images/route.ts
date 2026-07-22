@@ -5,6 +5,8 @@ import { supabase, supabaseAdmin } from "@/lib/supabase"
 // Expects a Supabase table `site_images` with columns:
 //   key (text, primary key), image_url (text), updated_at (timestamptz)
 
+export const dynamic = "force-dynamic"
+
 export async function GET() {
   try {
     const { data, error } = await supabase.from("site_images").select("key, image_url")

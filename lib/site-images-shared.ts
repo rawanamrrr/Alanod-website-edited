@@ -16,7 +16,7 @@ export const DEFAULT_SITE_IMAGES: Record<SiteImageKey, string> = {
 
 export const SITE_IMAGE_LABELS: Record<SiteImageKey, string> = {
   [SITE_IMAGE_KEYS.homeHero]: "Home Page — Hero Background",
-  [SITE_IMAGE_KEYS.homeArtOfCouture]: "Home Page — The Art of Couture Section",
+  [SITE_IMAGE_KEYS.homeArtOfCouture]: "Robe Image",
   [SITE_IMAGE_KEYS.customizeHero]: "Customize Page — Hero Background",
-  [SITE_IMAGE_KEYS.aboutHero]: "Robe Image",
+  [SITE_IMAGE_KEYS.aboutHero]: "About Image",
 }

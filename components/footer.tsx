@@ -177,7 +177,7 @@ export function Footer() {
             &copy; 2026 Alanoud Alqadi Atelier. All rights reserved. | 
             <span className="text-gray-500"> Made by </span>
             <a 
-              href="https://www.instagram.com/digitiva.co?igsh=MXNteGgyZjIzenQwaQ==" 
+              href="https://www.digitivaa.com/"
               target="_blank" 
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-white transition-colors"

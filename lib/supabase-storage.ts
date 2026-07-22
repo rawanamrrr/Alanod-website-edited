@@ -67,38 +67,85 @@ export const convertImageFileToWebP = async (
     return file
   }
 
-  const imageBitmap = await createImageBitmap(file)
-  
-  // For mobile, we can be more aggressive with resizing
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 768
-  const effectiveMaxDim = isMobile ? Math.min(maxDimension, 800) : maxDimension
-  
-  const scale = Math.min(1, effectiveMaxDim / Math.max(imageBitmap.width, imageBitmap.height))
+  // Decode the file into something drawable on a canvas. createImageBitmap
+  // is preferred, but some mobile browsers (iOS Safari with HEIC photos,
+  // in-app browsers) fail to decode certain files through it even though
+  // they can render the same file fine in a plain <img> tag — so fall back
+  // to that before giving up entirely.
+  type DrawableSource = { source: CanvasImageSource; width: number; height: number; revoke?: () => void }
 
-  const width = Math.max(1, Math.round(imageBitmap.width * scale))
-  const height = Math.max(1, Math.round(imageBitmap.height * scale))
+  const decodeViaBitmap = async (): Promise<DrawableSource | null> => {
+    try {
+      const bitmap = await createImageBitmap(file)
+      return { source: bitmap, width: bitmap.width, height: bitmap.height }
+    } catch (error) {
+      console.warn("⚠️ createImageBitmap failed, trying <img> fallback", error)
+      return null
+    }
+  }
 
-  const canvas = document.createElement("canvas")
-  canvas.width = width
-  canvas.height = height
+  const decodeViaImageElement = async (): Promise<DrawableSource | null> => {
+    const objectUrl = URL.createObjectURL(file)
+    try {
+      const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+        const el = new window.Image()
+        el.onload = () => resolve(el)
+        el.onerror = () => reject(new Error("Image element failed to load"))
+        el.src = objectUrl
+      })
+      return { source: img, width: img.naturalWidth, height: img.naturalHeight, revoke: () => URL.revokeObjectURL(objectUrl) }
+    } catch (error) {
+      console.warn("⚠️ <img> fallback decode also failed", error)
+      URL.revokeObjectURL(objectUrl)
+      return null
+    }
+  }
 
-  const ctx = canvas.getContext("2d")
-  if (!ctx) {
+  const drawable = (await decodeViaBitmap()) ?? (await decodeViaImageElement())
+
+  if (!drawable) {
+    // Both decode paths failed — upload the original file rather than
+    // blocking the upload entirely.
     return file
   }
 
-  ctx.drawImage(imageBitmap, 0, 0, width, height)
+  try {
+    // For mobile, we can be more aggressive with resizing
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768
+    const effectiveMaxDim = isMobile ? Math.min(maxDimension, 800) : maxDimension
 
-  const blob = await new Promise<Blob | null>((resolve) => {
-    canvas.toBlob(resolve, "image/webp", quality)
-  })
+    const scale = Math.min(1, effectiveMaxDim / Math.max(drawable.width, drawable.height))
 
-  if (!blob) {
+    const width = Math.max(1, Math.round(drawable.width * scale))
+    const height = Math.max(1, Math.round(drawable.height * scale))
+
+    const canvas = document.createElement("canvas")
+    canvas.width = width
+    canvas.height = height
+
+    const ctx = canvas.getContext("2d")
+    if (!ctx) {
+      return file
+    }
+
+    ctx.drawImage(drawable.source, 0, 0, width, height)
+
+    const blob = await new Promise<Blob | null>((resolve) => {
+      canvas.toBlob(resolve, "image/webp", quality)
+    })
+
+    if (!blob) {
+      return file
+    }
+
+    const baseName = file.name.replace(/\.[^.]+$/, "")
+    return new File([blob], `${baseName}.webp`, { type: "image/webp" })
+  } catch (error) {
+    console.warn("⚠️ WebP conversion failed, uploading original file instead", error)
     return file
+  } finally {
+    drawable.revoke?.()
   }
-
-  const baseName = file.name.replace(/\.[^.]+$/, "")
-  return new File([blob], `${baseName}.webp`, { type: "image/webp" })
 }
 
 export const uploadImageFile = async (file: File, folder: string) => {

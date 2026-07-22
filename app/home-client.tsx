@@ -1024,13 +1024,64 @@ export default function HomeClient({
         className="py-20 bg-white"
       >
         <div className="container mx-auto px-6">
-          {/* Art of Couture Text - Now above the image */}
+          <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
+            {/* Robe Image */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4 }}
+              viewport={{ once: true }}
+              className="w-full h-64 md:h-[500px] relative"
+            >
+              <button
+                type="button"
+                onClick={handleCollectionClick}
+                className="block w-full h-full relative group"
+                aria-label={settings.language === 'ar' ? "اطلبي روبك عبر واتساب" : "Order your robe via WhatsApp"}
+              >
+                <Image
+                  src={getImage(SITE_IMAGE_KEYS.homeArtOfCouture)}
+                  alt="Alanod Background"
+                  fill
+                  className="object-cover rounded-lg shadow-xl transition-transform duration-700 group-hover:scale-105"
+                  priority
+                />
+              </button>
+            </motion.div>
+
+            {/* Robe Text - Next to the image */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4 }}
+              viewport={{ once: true }}
+            >
+              <h3 className="text-2xl md:text-3xl font-light tracking-wider mb-6 font-engravers uppercase">
+                {settings.language === 'ar'
+                  ? "احصلي على روبك الآن مع فستانك!"
+                  : "Get your robe now with your dress!"}
+              </h3>
+              <motion.p
+                className="text-gray-600 mb-8 leading-relaxed"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: 0.4, delay: 0.15 }}
+                viewport={{ once: true }}
+              >
+                {settings.language === 'ar'
+                  ? "صُمم هذا الروب ليُرتدى في أكثر لحظاتك حميمية أثناء التجهّز، حين يكون اليوم لا يزال يتكشّف، والحماس هادئاً لكنه قوي، وحين يتشكّل كل شيء ببطء ليصبح كما يجب أن يكون."
+                  : "This robe was designed to be worn in your most intimate getting ready moments when the day is still unfolding when the excitement is quiet but powerful, and when everything is slowly becoming what it's meant to be."}
+              </motion.p>
+            </motion.div>
+          </div>
+
+          {/* Art of Couture Text */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
             viewport={{ once: true }}
-            className="max-w-3xl mx-auto text-center mb-16"
+            className="max-w-3xl mx-auto text-center"
           >
             <h2 className="text-2xl md:text-3xl font-light tracking-wider mb-6 font-engravers">{t("theArtOfCouture")}</h2>
             <motion.p
@@ -1068,46 +1119,6 @@ export default function HomeClient({
               </Link>
             </motion.div>
           </motion.div>
-
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Robe Image */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4 }}
-              viewport={{ once: true }}
-              className="w-full h-64 md:h-[500px] relative"
-            >
-              <Image
-                src={getImage(SITE_IMAGE_KEYS.homeArtOfCouture)}
-                alt="Alanod Background"
-                fill
-                className="object-cover rounded-lg shadow-xl"
-                priority
-              />
-            </motion.div>
-
-            {/* Robe Text - Next to the image */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4 }}
-              viewport={{ once: true }}
-            >
-              <h3 className="text-2xl md:text-3xl font-light tracking-wider mb-6 font-engravers uppercase">
-                Get your robe now with your dress!
-              </h3>
-              <motion.p
-                className="text-gray-600 mb-8 leading-relaxed"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ duration: 0.4, delay: 0.15 }}
-                viewport={{ once: true }}
-              >
-                This robe was designed to be worn in your most intimate getting ready moments when the day is still unfolding when the excitement is quiet but powerful, and when everything is slowly becoming what it's meant to be.
-              </motion.p>
-            </motion.div>
-          </div>
         </div>
       </motion.section>
 
